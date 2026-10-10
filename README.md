@@ -17,15 +17,23 @@ A public board ranks issues by how many students are hitting them; each authorit
 
 ```python
 # gemma_client.py
-_client.models.generate_content(model=MODEL, contents=contents, config=config)
-#                               MODEL = "gemma-4-26b-a4b-it"
+get_client().models.generate_content(model=MODEL, contents=contents, config=config)
+#                                    MODEL = "gemma-4-26b-a4b-it"
 ```
+
+## What's in the app
+
+- **Report** — type or paste a complaint, attach a photo, watch Gemma's steps, answer if it asks back.
+- **Board** — public ranking by priority (reports x severity weight), charts, domain filters and search. Refreshes every 8 seconds, so a merged report moves up by itself.
+- **Authority** — pick a role (Hostel Office, Mess Committee, IT Cell, ...) to see only that queue, with every raw report, photo and follow-up answer, and mark issues in progress or resolved.
+
+Light and dark themes; the Report page works on a phone.
 
 ## How to run
 
 ```bash
 python -m venv .venv && ./.venv/bin/pip install -r requirements-dev.txt
-cp .env.example .env            # then put your key after GEMINI_API_KEY=
+cp .env.example .env            # then add a line: GEMINI_API_KEY=your-key
                                 # free key: https://aistudio.google.com
 
 ./.venv/bin/python -m api.seed --reset           # load seed data into data/shikayat.db
@@ -33,14 +41,27 @@ cp .env.example .env            # then put your key after GEMINI_API_KEY=
 cd web && npm install && npm run dev             # UI on http://localhost:5173
 ```
 
+On Windows the venv programs are in `.venv\Scripts\` instead of `.venv/bin/`.
+The Vite server also listens on the network, so a phone on the same Wi-Fi can open
+`http://<laptop-ip>:5173`.
+
 One complaint, straight from the terminal:
 
 ```bash
-./.venv/bin/python -m complaints.cli "aaj lunch mein dal mein keeda tha" --photo demo/photos/food.jpg
+./.venv/bin/python -m complaints.cli "aaj lunch mein dal mein keeda tha" --photo demo/photos/mess-thali.jpg
 ./.venv/bin/python -m complaints.cli "AC se paani tapak raha hai"        # Gemma asks which hostel and room
 ```
 
 Tests: `./.venv/bin/python -m pytest harness` (no key and no internet needed — it uses a fake model).
+
+Other checks:
+
+```bash
+./.venv/bin/python -m complaints.eval            # seed/test_cases.json through the real agent, pass/fail table
+./.venv/bin/python seed/validate_seed.py         # seed data rules
+./.venv/bin/python tools/check_shikayat.py       # our pre-submission gate
+./.venv/bin/python tools/check_submission.py     # the organisers' gate
+```
 
 ## What we changed in the harness and why
 
@@ -75,6 +96,9 @@ priority or escalation itself. See [`complaints/tools.py`](complaints/tools.py).
 Honest limitation: paused conversations live in an in-memory dict keyed by `thread_id`
 (`harness.THREADS`). Restarting the server loses half-finished reports. For a demo that is a fair
 trade for having no extra moving parts; production would put them in Redis or a `threads` table.
+In the same spirit, photos are saved on local disk in `uploads/` (production would use object
+storage such as S3 or Cloud Storage), and the Authority page uses a role picker rather than a
+login (a real version would use institute SSO).
 
 Tests: 34 of them, all using a fake `generate`, so `python -m pytest harness` needs no API key
 and no internet.
