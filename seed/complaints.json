@@ -1,0 +1,1223 @@
+{
+  "complaints": [
+    {
+      "category": "Hygiene",
+      "building": "Mess",
+      "spot": null,
+      "meal": "lunch",
+      "summary": "Hair and flies found in mess food",
+      "details": "Students repeatedly found hair and flies in the served food.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "aaj dal mein makkhi thi yaar, khana nahi kha paya",
+          "language": "hinglish",
+          "created_at": "2026-10-06T13:10:00+05:30"
+        },
+        {
+          "raw_text": "Found a hair in the rice at lunch today. Second time this week.",
+          "language": "en",
+          "created_at": "2026-10-07T13:25:00+05:30"
+        },
+        {
+          "raw_text": "mess ke khane me kal bhi baal mila tha",
+          "language": "hinglish",
+          "created_at": "2026-10-08T13:05:00+05:30"
+        },
+        {
+          "raw_text": "Flies all over the serving counter at lunch.",
+          "language": "en",
+          "created_at": "2026-10-09T13:40:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Plumbing & Water",
+      "building": "BH1 (Kanhar)",
+      "spot": "3F washroom",
+      "meal": null,
+      "summary": "No water supply on 3rd floor since morning",
+      "details": "Taps on the third floor have been dry since early morning.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "bhai 2 din se paani nahi aa raha 3rd floor pe",
+          "language": "hinglish",
+          "created_at": "2026-09-30T08:00:00+05:30"
+        },
+        {
+          "raw_text": "No water in 3F washroom again today.",
+          "language": "en",
+          "created_at": "2026-10-01T09:20:00+05:30"
+        },
+        {
+          "raw_text": "paani ka problem solve nahi hua abhi tak",
+          "language": "hinglish",
+          "created_at": "2026-10-02T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Third floor taps completely dry since 6am.",
+          "language": "en",
+          "created_at": "2026-10-03T08:15:00+05:30"
+        },
+        {
+          "raw_text": "still no water, kaise nahaye",
+          "language": "hinglish",
+          "created_at": "2026-10-04T09:00:00+05:30"
+        },
+        {
+          "raw_text": "paani nahi hai bhai, kuch karo",
+          "language": "hinglish",
+          "created_at": "2026-10-06T09:45:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Wi-Fi & LAN",
+      "building": "BH2 (Gopad)",
+      "spot": "2F corridor",
+      "meal": null,
+      "summary": "Wi-Fi down on 2nd floor of hostel",
+      "details": "No connectivity on the second floor for several days.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "wifi dead on 2nd floor since morning",
+          "language": "hinglish",
+          "created_at": "2026-09-29T11:00:00+05:30"
+        },
+        {
+          "raw_text": "Cannot connect to campus Wi-Fi from my room at all.",
+          "language": "en",
+          "created_at": "2026-09-30T14:00:00+05:30"
+        },
+        {
+          "raw_text": "internet nahi chal raha, assignment submit karna hai",
+          "language": "hinglish",
+          "created_at": "2026-10-01T20:00:00+05:30"
+        },
+        {
+          "raw_text": "2nd floor wifi still down.",
+          "language": "en",
+          "created_at": "2026-10-02T10:00:00+05:30"
+        },
+        {
+          "raw_text": "wifi ka kuch karo yaar, 5 din ho gaye",
+          "language": "hinglish",
+          "created_at": "2026-10-04T22:00:00+05:30"
+        },
+        {
+          "raw_text": "No Wi-Fi signal on second floor corridor.",
+          "language": "en",
+          "created_at": "2026-10-06T16:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Housekeeping",
+      "building": "GH1 (Indravati)",
+      "spot": "2F washroom",
+      "meal": null,
+      "summary": "Washrooms not cleaned for several days",
+      "details": "Shared washrooms on two floors have gone uncleaned.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "washroom 3 din se saaf nahi hua",
+          "language": "hinglish",
+          "created_at": "2026-10-02T08:00:00+05:30"
+        },
+        {
+          "raw_text": "The common washroom is filthy.",
+          "language": "en",
+          "created_at": "2026-10-03T09:00:00+05:30"
+        },
+        {
+          "raw_text": "safai nahi ho rahi bathroom me",
+          "language": "hinglish",
+          "created_at": "2026-10-05T08:30:00+05:30"
+        },
+        {
+          "raw_text": "Washroom still dirty, no cleaning staff seen.",
+          "language": "en",
+          "created_at": "2026-10-06T10:00:00+05:30"
+        },
+        {
+          "raw_text": "bathroom ki halat kharab hai",
+          "language": "hinglish",
+          "created_at": "2026-10-07T08:45:00+05:30"
+        },
+        {
+          "raw_text": "Please get the washrooms cleaned.",
+          "language": "en",
+          "created_at": "2026-10-09T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Food Quality",
+      "building": "Mess",
+      "spot": null,
+      "meal": "dinner",
+      "summary": "Undercooked rotis served at dinner",
+      "details": "Rotis served at dinner were raw in the middle.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "roti kacchi thi dinner me",
+          "language": "hinglish",
+          "created_at": "2026-10-01T20:00:00+05:30"
+        },
+        {
+          "raw_text": "Dinner rotis were completely undercooked.",
+          "language": "en",
+          "created_at": "2026-10-02T20:15:00+05:30"
+        },
+        {
+          "raw_text": "aaj bhi roti kacchi",
+          "language": "hinglish",
+          "created_at": "2026-10-04T20:30:00+05:30"
+        },
+        {
+          "raw_text": "Raw rotis again at dinner.",
+          "language": "en",
+          "created_at": "2026-10-05T20:00:00+05:30"
+        },
+        {
+          "raw_text": "khana theek se banao please",
+          "language": "hinglish",
+          "created_at": "2026-10-07T20:10:00+05:30"
+        },
+        {
+          "raw_text": "roti andar se kachchi hai",
+          "language": "hinglish",
+          "created_at": "2026-10-09T20:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Roads & Lights",
+      "building": null,
+      "spot": "main gate approach road",
+      "meal": null,
+      "summary": "Street light not working near main gate",
+      "details": "The approach road to the main gate is unlit at night.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "main gate ke paas light nahi jal rahi, raat me dar lagta hai",
+          "language": "hinglish",
+          "created_at": "2026-09-29T21:00:00+05:30"
+        },
+        {
+          "raw_text": "Street light near the main gate is dead.",
+          "language": "en",
+          "created_at": "2026-10-01T20:00:00+05:30"
+        },
+        {
+          "raw_text": "gate ke paas andhera rehta hai",
+          "language": "hinglish",
+          "created_at": "2026-10-03T21:30:00+05:30"
+        },
+        {
+          "raw_text": "The road to the gate is pitch dark after 7pm.",
+          "language": "en",
+          "created_at": "2026-10-05T19:45:00+05:30"
+        },
+        {
+          "raw_text": "light theek karwao gate pe",
+          "language": "hinglish",
+          "created_at": "2026-10-08T21:00:00+05:30"
+        },
+        {
+          "raw_text": "Still no light on the gate road.",
+          "language": "en",
+          "created_at": "2026-10-09T20:30:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Electrical & AC",
+      "building": "BH1 (Kanhar)",
+      "spot": "A114",
+      "meal": null,
+      "summary": "Ceiling fan not working in room A114",
+      "details": "The ceiling fan has stopped completely.",
+      "severity": "high",
+      "status": "in_progress",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "fan band ho gaya hai room me",
+          "language": "hinglish",
+          "created_at": "2026-10-03T15:00:00+05:30"
+        },
+        {
+          "raw_text": "Room fan dead since yesterday.",
+          "language": "en",
+          "created_at": "2026-10-04T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Water Coolers",
+      "building": null,
+      "spot": "library entrance",
+      "meal": null,
+      "summary": "Water cooler not cooling near library",
+      "details": "The cooler dispenses only room-temperature water.",
+      "severity": "medium",
+      "status": "in_progress",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "library ke bahar cooler ka paani garam aa raha hai",
+          "language": "hinglish",
+          "created_at": "2026-10-02T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Water cooler outside the library is not cooling.",
+          "language": "en",
+          "created_at": "2026-10-05T14:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Classrooms & Labs",
+      "building": "Academic Building",
+      "spot": "LH-2",
+      "meal": null,
+      "summary": "Projector not working in lecture hall",
+      "details": "The projector in the hall does not display.",
+      "severity": "high",
+      "status": "in_progress",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "projector kaam nahi kar raha LH-2 me",
+          "language": "hinglish",
+          "created_at": "2026-10-06T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Projector in LH-2 fails to turn on.",
+          "language": "en",
+          "created_at": "2026-10-07T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Furniture & Doors",
+      "building": "GH1 (Indravati)",
+      "spot": "C208",
+      "meal": null,
+      "summary": "Broken door lock in room C208",
+      "details": "The room door lock was broken and would not latch.",
+      "severity": "high",
+      "status": "resolved",
+      "suggested_category": null,
+      "resolution_note": "Lock replaced by hostel maintenance on 5 Oct.",
+      "reports": [
+        {
+          "raw_text": "room ka lock toot gaya hai",
+          "language": "hinglish",
+          "created_at": "2026-09-28T18:00:00+05:30"
+        },
+        {
+          "raw_text": "Door does not lock at all.",
+          "language": "en",
+          "created_at": "2026-09-29T09:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Portals & Accounts",
+      "building": null,
+      "spot": null,
+      "meal": null,
+      "summary": "Cannot log in to the academic portal",
+      "details": "Login failed with a server error.",
+      "severity": "medium",
+      "status": "resolved",
+      "suggested_category": null,
+      "resolution_note": "Portal account unlocked by IT Cell.",
+      "reports": [
+        {
+          "raw_text": "portal pe login nahi ho raha",
+          "language": "hinglish",
+          "created_at": "2026-09-29T12:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Animals & Safety",
+      "building": null,
+      "spot": "BH2 entrance",
+      "meal": null,
+      "summary": "Stray dogs near the hostel entrance at night",
+      "details": "A pack of stray dogs gathers at the entrance.",
+      "severity": "urgent",
+      "status": "resolved",
+      "suggested_category": null,
+      "resolution_note": "Municipal team relocated the dogs on 7 Oct.",
+      "reports": [
+        {
+          "raw_text": "hostel ke gate pe kutte bahut hai raat me",
+          "language": "hinglish",
+          "created_at": "2026-09-30T22:00:00+05:30"
+        },
+        {
+          "raw_text": "Stray dogs chased a student near the entrance.",
+          "language": "en",
+          "created_at": "2026-10-01T23:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Service & Timings",
+      "building": "Mess",
+      "spot": null,
+      "meal": null,
+      "summary": "Mess closed before the scheduled time",
+      "details": "The mess shut 20 minutes early at dinner.",
+      "severity": "low",
+      "status": "resolved",
+      "suggested_category": null,
+      "resolution_note": "Mess timings reinstated after a committee notice.",
+      "reports": [
+        {
+          "raw_text": "mess time se pehle band kar dete hai",
+          "language": "hinglish",
+          "created_at": "2026-10-02T21:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Other",
+      "building": "BH1 (Kanhar)",
+      "spot": null,
+      "meal": null,
+      "summary": "Laundry service not collecting clothes",
+      "details": "Laundry pickup has been skipped for over a week.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": "Laundry",
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "laundry wale kapde lene nahi aa rahe",
+          "language": "hinglish",
+          "created_at": "2026-10-03T10:00:00+05:30"
+        },
+        {
+          "raw_text": "No laundry pickup for 8 days.",
+          "language": "en",
+          "created_at": "2026-10-05T12:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Other",
+      "building": "BH2 (Gopad)",
+      "spot": null,
+      "meal": null,
+      "summary": "Laundry returning clothes damaged",
+      "details": "Several garments came back torn.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": "Laundry",
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "laundry se kapde phat ke aaye",
+          "language": "hinglish",
+          "created_at": "2026-10-04T17:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Other",
+      "building": null,
+      "spot": null,
+      "meal": null,
+      "summary": "Laundry charges unclear this month",
+      "details": "Billing for laundry was higher than posted rates.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": "Laundry",
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "laundry ka bill zyada aaya hai",
+          "language": "hinglish",
+          "created_at": "2026-10-07T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Other",
+      "building": null,
+      "spot": "gym hall",
+      "meal": null,
+      "summary": "Gym equipment broken and unusable",
+      "details": "Two machines in the gym are out of order.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": "Gym",
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "gym ki machine kharab hai",
+          "language": "hinglish",
+          "created_at": "2026-10-05T18:00:00+05:30"
+        },
+        {
+          "raw_text": "Treadmill and cable machine both broken.",
+          "language": "en",
+          "created_at": "2026-10-08T18:30:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Electrical & AC",
+      "building": "GH1 (Indravati)",
+      "spot": "B201",
+      "meal": null,
+      "summary": "Light switch sparking in room B201",
+      "details": "Light switch sparking in room B201.",
+      "severity": "urgent",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Light switch sparking in room B201.",
+          "language": "en",
+          "created_at": "2026-09-27T11:00:00+05:30"
+        },
+        {
+          "raw_text": "light switch sparking in room b201 - kuch karo bhai",
+          "language": "hinglish",
+          "created_at": "2026-09-29T13:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Electrical & AC",
+      "building": "MSH (Married Hostel)",
+      "spot": "F304",
+      "meal": null,
+      "summary": "AC not cooling in room F304",
+      "details": "AC not cooling in room F304.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "ac not cooling in room f304 - bahut problem ho rahi hai",
+          "language": "hinglish",
+          "created_at": "2026-09-30T10:00:00+05:30"
+        },
+        {
+          "raw_text": "AC not cooling in room F304.",
+          "language": "en",
+          "created_at": "2026-10-02T15:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Electrical & AC",
+      "building": "BH1 (Kanhar)",
+      "spot": "2F corridor",
+      "meal": null,
+      "summary": "Tube light flickering in corridor",
+      "details": "Tube light flickering in corridor.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Tube light flickering in corridor.",
+          "language": "en",
+          "created_at": "2026-10-03T11:00:00+05:30"
+        },
+        {
+          "raw_text": "tube light flickering in corridor - jaldi dekh lo",
+          "language": "hinglish",
+          "created_at": "2026-10-05T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Tube light flickering in corridor.",
+          "language": "en",
+          "created_at": "2026-10-07T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Plumbing & Water",
+      "building": "GH1 (Indravati)",
+      "spot": "2F washroom",
+      "meal": null,
+      "summary": "Tap leaking in 2nd-floor washroom",
+      "details": "Tap leaking in 2nd-floor washroom.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "tap leaking in 2nd-floor washroom - please isko fix karo",
+          "language": "hinglish",
+          "created_at": "2026-10-06T10:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Plumbing & Water",
+      "building": "BH1 (Kanhar)",
+      "spot": "ground-floor washroom",
+      "meal": null,
+      "summary": "Blocked drain in ground-floor washroom",
+      "details": "Blocked drain in ground-floor washroom.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Blocked drain in ground-floor washroom.",
+          "language": "en",
+          "created_at": "2026-10-09T11:00:00+05:30"
+        },
+        {
+          "raw_text": "blocked drain in ground-floor washroom - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-09-28T13:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Plumbing & Water",
+      "building": "MSH (Married Hostel)",
+      "spot": "D305",
+      "meal": null,
+      "summary": "Low water pressure in room D305",
+      "details": "Low water pressure in room D305.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "low water pressure in room d305 - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-09-29T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Low water pressure in room D305.",
+          "language": "en",
+          "created_at": "2026-10-01T15:00:00+05:30"
+        },
+        {
+          "raw_text": "low water pressure in room d305 - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-10-03T16:00:00+05:30"
+        },
+        {
+          "raw_text": "Low water pressure in room D305.",
+          "language": "en",
+          "created_at": "2026-10-05T13:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Furniture & Doors",
+      "building": "BH1 (Kanhar)",
+      "spot": "E112",
+      "meal": null,
+      "summary": "Broken chair in room E112",
+      "details": "Broken chair in room E112.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Broken chair in room E112.",
+          "language": "en",
+          "created_at": "2026-10-02T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Furniture & Doors",
+      "building": "GH1 (Indravati)",
+      "spot": "A227",
+      "meal": null,
+      "summary": "Window latch broken in room A227",
+      "details": "Window latch broken in room A227.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "window latch broken in room a227 - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-05T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Window latch broken in room A227.",
+          "language": "en",
+          "created_at": "2026-10-07T15:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Furniture & Doors",
+      "building": "BH2 (Gopad)",
+      "spot": "B322",
+      "meal": null,
+      "summary": "Study table wobbling in room B322",
+      "details": "Study table wobbling in room B322.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Study table wobbling in room B322.",
+          "language": "en",
+          "created_at": "2026-10-08T11:00:00+05:30"
+        },
+        {
+          "raw_text": "study table wobbling in room b322 - kuch karo bhai",
+          "language": "hinglish",
+          "created_at": "2026-09-27T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Study table wobbling in room B322.",
+          "language": "en",
+          "created_at": "2026-09-29T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Housekeeping",
+      "building": "BH2 (Gopad)",
+      "spot": "3F corridor",
+      "meal": null,
+      "summary": "Garbage not collected from corridor",
+      "details": "Garbage not collected from corridor.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "garbage not collected from corridor - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-09-28T10:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Housekeeping",
+      "building": "MSH (Married Hostel)",
+      "spot": "common room",
+      "meal": null,
+      "summary": "Dust and cobwebs in the common room",
+      "details": "Dust and cobwebs in the common room.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Dust and cobwebs in the common room.",
+          "language": "en",
+          "created_at": "2026-10-01T11:00:00+05:30"
+        },
+        {
+          "raw_text": "dust and cobwebs in the common room - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-03T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Dust and cobwebs in the common room.",
+          "language": "en",
+          "created_at": "2026-10-05T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Food Quality",
+      "building": "Mess",
+      "spot": null,
+      "meal": "lunch",
+      "summary": "Watery dal served at lunch",
+      "details": "Watery dal served at lunch.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "watery dal served at lunch - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-10-04T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Watery dal served at lunch.",
+          "language": "en",
+          "created_at": "2026-10-06T15:00:00+05:30"
+        },
+        {
+          "raw_text": "watery dal served at lunch - bahut problem ho rahi hai",
+          "language": "hinglish",
+          "created_at": "2026-10-08T16:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Food Quality",
+      "building": "Mess",
+      "spot": null,
+      "meal": "breakfast",
+      "summary": "Stale bread at breakfast",
+      "details": "Stale bread at breakfast.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Stale bread at breakfast.",
+          "language": "en",
+          "created_at": "2026-10-07T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Hygiene",
+      "building": "Mess",
+      "spot": null,
+      "meal": "dinner",
+      "summary": "Dirty plates stacked at the washing area",
+      "details": "Dirty plates stacked at the washing area.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "dirty plates stacked at the washing area - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-09-27T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Dirty plates stacked at the washing area.",
+          "language": "en",
+          "created_at": "2026-09-29T15:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Hygiene",
+      "building": "Mess",
+      "spot": null,
+      "meal": "snacks",
+      "summary": "Unclean water jugs on mess tables",
+      "details": "Unclean water jugs on mess tables.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Unclean water jugs on mess tables.",
+          "language": "en",
+          "created_at": "2026-09-30T11:00:00+05:30"
+        },
+        {
+          "raw_text": "unclean water jugs on mess tables - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-02T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Unclean water jugs on mess tables.",
+          "language": "en",
+          "created_at": "2026-10-04T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Service & Timings",
+      "building": "Mess",
+      "spot": null,
+      "meal": null,
+      "summary": "Long queue at breakfast every day",
+      "details": "Long queue at breakfast every day.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "long queue at breakfast every day - jaldi dekh lo",
+          "language": "hinglish",
+          "created_at": "2026-10-03T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Long queue at breakfast every day.",
+          "language": "en",
+          "created_at": "2026-10-05T15:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Wi-Fi & LAN",
+      "building": "Academic Building",
+      "spot": "library reading hall",
+      "meal": null,
+      "summary": "Slow Wi-Fi in the library reading hall",
+      "details": "Slow Wi-Fi in the library reading hall.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Slow Wi-Fi in the library reading hall.",
+          "language": "en",
+          "created_at": "2026-10-06T11:00:00+05:30"
+        },
+        {
+          "raw_text": "slow wi-fi in the library reading hall - jaldi dekh lo",
+          "language": "hinglish",
+          "created_at": "2026-10-08T13:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Wi-Fi & LAN",
+      "building": "GH1 (Indravati)",
+      "spot": "C208",
+      "meal": null,
+      "summary": "LAN port dead in room C208",
+      "details": "LAN port dead in room C208.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "lan port dead in room c208 - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-09T10:00:00+05:30"
+        },
+        {
+          "raw_text": "LAN port dead in room C208.",
+          "language": "en",
+          "created_at": "2026-09-28T15:00:00+05:30"
+        },
+        {
+          "raw_text": "lan port dead in room c208 - bahut problem ho rahi hai",
+          "language": "hinglish",
+          "created_at": "2026-09-30T16:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Portals & Accounts",
+      "building": null,
+      "spot": null,
+      "meal": null,
+      "summary": "Grade card not loading on the portal",
+      "details": "Grade card not loading on the portal.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Grade card not loading on the portal.",
+          "language": "en",
+          "created_at": "2026-09-29T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Classrooms & Labs",
+      "building": "Academic Building",
+      "spot": "chemistry lab",
+      "meal": null,
+      "summary": "Broken benches in the chemistry lab",
+      "details": "Broken benches in the chemistry lab.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "broken benches in the chemistry lab - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-02T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Broken benches in the chemistry lab.",
+          "language": "en",
+          "created_at": "2026-10-04T15:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Classrooms & Labs",
+      "building": "Academic Building",
+      "spot": "computer lab",
+      "meal": null,
+      "summary": "AC not working in the computer lab",
+      "details": "AC not working in the computer lab.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "AC not working in the computer lab.",
+          "language": "en",
+          "created_at": "2026-10-05T11:00:00+05:30"
+        },
+        {
+          "raw_text": "ac not working in the computer lab - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-10-07T13:00:00+05:30"
+        },
+        {
+          "raw_text": "AC not working in the computer lab.",
+          "language": "en",
+          "created_at": "2026-10-09T19:00:00+05:30"
+        },
+        {
+          "raw_text": "ac not working in the computer lab - jaldi dekh lo",
+          "language": "hinglish",
+          "created_at": "2026-09-28T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Water Coolers",
+      "building": null,
+      "spot": "outside mess",
+      "meal": null,
+      "summary": "Water cooler leaking near the mess",
+      "details": "Water cooler leaking near the mess.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "water cooler leaking near the mess - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-08T10:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Water Coolers",
+      "building": null,
+      "spot": "academic lobby",
+      "meal": null,
+      "summary": "No drinking water point in the academic lobby",
+      "details": "No drinking water point in the academic lobby.",
+      "severity": "medium",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "No drinking water point in the academic lobby.",
+          "language": "en",
+          "created_at": "2026-09-28T11:00:00+05:30"
+        },
+        {
+          "raw_text": "no drinking water point in the academic lobby - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-09-30T13:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Roads & Lights",
+      "building": null,
+      "spot": "hostel approach road",
+      "meal": null,
+      "summary": "Pothole on the road to the hostels",
+      "details": "Pothole on the road to the hostels.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "pothole on the road to the hostels - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-10-01T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Pothole on the road to the hostels.",
+          "language": "en",
+          "created_at": "2026-10-03T15:00:00+05:30"
+        },
+        {
+          "raw_text": "pothole on the road to the hostels - bahut problem ho rahi hai",
+          "language": "hinglish",
+          "created_at": "2026-10-05T16:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Roads & Lights",
+      "building": null,
+      "spot": "canteen walkway",
+      "meal": null,
+      "summary": "Broken paver blocks near the canteen",
+      "details": "Broken paver blocks near the canteen.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Broken paver blocks near the canteen.",
+          "language": "en",
+          "created_at": "2026-10-04T11:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Transport",
+      "building": null,
+      "spot": "main gate bus stop",
+      "meal": null,
+      "summary": "Campus bus skipped the evening trip",
+      "details": "Campus bus skipped the evening trip.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "campus bus skipped the evening trip - please isko fix karo",
+          "language": "hinglish",
+          "created_at": "2026-10-07T10:00:00+05:30"
+        },
+        {
+          "raw_text": "Campus bus skipped the evening trip.",
+          "language": "en",
+          "created_at": "2026-10-09T15:00:00+05:30"
+        },
+        {
+          "raw_text": "campus bus skipped the evening trip - please isko fix karo",
+          "language": "hinglish",
+          "created_at": "2026-09-28T16:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Transport",
+      "building": null,
+      "spot": "main gate bus stop",
+      "meal": null,
+      "summary": "Bus timings not displayed at the stop",
+      "details": "Bus timings not displayed at the stop.",
+      "severity": "low",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Bus timings not displayed at the stop.",
+          "language": "en",
+          "created_at": "2026-09-27T11:00:00+05:30"
+        },
+        {
+          "raw_text": "bus timings not displayed at the stop - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-09-29T13:00:00+05:30"
+        },
+        {
+          "raw_text": "Bus timings not displayed at the stop.",
+          "language": "en",
+          "created_at": "2026-10-01T19:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Animals & Safety",
+      "building": "BH1 (Kanhar)",
+      "spot": "4F balcony",
+      "meal": null,
+      "summary": "Monkeys entering hostel balconies",
+      "details": "Monkeys entering hostel balconies.",
+      "severity": "high",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "monkeys entering hostel balconies - theek karwa do please",
+          "language": "hinglish",
+          "created_at": "2026-09-30T10:00:00+05:30"
+        }
+      ]
+    },
+    {
+      "category": "Animals & Safety",
+      "building": null,
+      "spot": "sports ground",
+      "meal": null,
+      "summary": "Snake spotted near the sports ground",
+      "details": "Snake spotted near the sports ground.",
+      "severity": "urgent",
+      "status": "open",
+      "suggested_category": null,
+      "resolution_note": null,
+      "reports": [
+        {
+          "raw_text": "Snake spotted near the sports ground.",
+          "language": "en",
+          "created_at": "2026-10-03T11:00:00+05:30"
+        },
+        {
+          "raw_text": "snake spotted near the sports ground - kaafi dino se aisa hai",
+          "language": "hinglish",
+          "created_at": "2026-10-05T13:00:00+05:30"
+        }
+      ]
+    }
+  ]
+}
