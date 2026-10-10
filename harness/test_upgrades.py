@@ -131,13 +131,63 @@ def test_resume_continues_the_same_conversation(demo_tools):
     assert paused.status == "needs_input"
 
     turns_before = len(paused.state["contents"])
-    agent.generate = fake_model([tool_request("decide", {"choice": "file BH2 E207"})])
+    model = fake_model([tool_request("decide", {"choice": "file BH2 E207"})])
+    agent.generate = model
     done = agent.resume(paused.state, "BH2 E207")
 
     assert done.status == "done"
     assert done.result == "decided: file BH2 E207"
-    assert len(paused.state["contents"]) > turns_before  # same conversation, not a fresh one
+    # The model is sent the whole earlier conversation plus the answer turn...
+    assert model.sent == [turns_before + 1]
+    # ...but the saved state itself is untouched, so a failed resume can be retried.
+    assert len(paused.state["contents"]) == turns_before
     assert any("BH2 E207" in str(s["text"]) for s in done.steps)
+
+
+def test_a_failed_resume_can_be_retried(demo_tools):
+    """A 503 from Google must not corrupt the saved conversation."""
+    agent = Agent(tools=["ask", "decide"],
+                  generate=fake_model([tool_request("ask", {"question": "Which room?"})]))
+    paused = agent.run_task("ac leaking", thread_id="t_retry")
+    turns = len(paused.state["contents"])
+
+    def boom(contents, config):
+        raise RuntimeError("network is down")
+
+    agent.generate = boom
+    assert agent.resume(paused.state, "BH2 E207").status == "error"
+    assert len(paused.state["contents"]) == turns  # not half-advanced
+
+    model = fake_model([tool_request("decide", {"choice": "ok"})])
+    agent.generate = model
+    assert agent.resume(paused.state, "BH2 E207").status == "done"
+    assert model.sent == [turns + 1]  # one answer turn, not two
+
+
+def test_sibling_tool_results_survive_a_pause(demo_tools):
+    """If the model asks for look+ask in one turn, look's result must not be lost."""
+    call_look = tool_request("look", {"query": "BH2"}).function_calls[0]
+    call_ask = tool_request("ask", {"question": "Which room?"}).function_calls[0]
+    from types import SimpleNamespace
+    from google.genai import types as gt
+    both = SimpleNamespace(
+        function_calls=[call_look, call_ask], text=None,
+        candidates=[SimpleNamespace(content=gt.Content(role="model", parts=[gt.Part(text="(two)")]))])
+
+    agent = Agent(tools=["look", "ask", "decide"], generate=fake_model([both]))
+    paused = agent.run_task("ac leaking", thread_id="t_both")
+    assert paused.status == "needs_input"
+
+    sent = {}
+
+    def generate(contents, config):
+        sent["parts"] = contents[-1].parts
+        return tool_request("decide", {"choice": "ok"})
+
+    agent.generate = generate
+    assert agent.resume(paused.state, "BH2 E207").status == "done"
+    names = [p.function_response.name for p in sent["parts"] if p.function_response]
+    assert names == ["look", "ask"]  # one response per call, in order
 
 
 def test_resume_by_thread_id(demo_tools):

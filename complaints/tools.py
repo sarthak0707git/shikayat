@@ -29,7 +29,11 @@ CURRENT = contextvars.ContextVar("current_report")
 PLACE_WORDS = ("floor", "washroom", "bathroom", "toilet", "corridor", "lobby", "gate", "ground",
                "balcony", "stair", "mess", "hall", "lab", "room", "wing", "kitchen", "counter",
                "canteen", "library", "gym", "road", "park", "stop", "block", "entrance")
-ROOM_PATTERN = re.compile(r"^[A-Za-z]-?\d{2,4}$")  # E207, B322, F101, LH-2
+ROOM_PATTERN = re.compile(r"^[A-Za-z]{1,3}-?\d{2,4}$")  # E207, B322, F101
+VAGUE_SPOTS = {"my room", "mera room", "meri room", "apna room", "the room", "room",
+               "upstairs", "downstairs", "here", "hostel", "mess", "campus", "outside"}
+# "my room" in any language is not a spot. A bare number is not either (brief adjustment 4).
+POSSESSIVE = re.compile(r"\b(my|mera|meri|apna|hamara|humara|the)\b")
 
 
 def context():
@@ -58,18 +62,56 @@ def new_context(raw_text, photo_path=None, thread_id=None):
 
 
 def spot_is_specific(spot):
-    """True if a technician could walk to it. 'my room' and 'upstairs' cannot."""
+    """True if a technician could walk to it.
+
+    "E207" yes. "2F washroom" yes. "my room", "upstairs" and a bare "214" no - the brief
+    is explicit that a room number without its wing letter is not enough.
+    """
     if not spot:
         return False
     text = spot.strip()
     if len(text) < 3:
         return False
-    if ROOM_PATTERN.match(text):
+    if ROOM_PATTERN.match(text):  # wing letter + room number
         return True
-    low = text.lower()
-    if low in ("my room", "upstairs", "downstairs", "here", "hostel", "room"):
+    low = " ".join(text.lower().split())
+    if low in VAGUE_SPOTS or low.isdigit():
         return False
-    return any(word in low for word in PLACE_WORDS) or bool(re.search(r"\d", low))
+    if POSSESSIVE.search(low) and not re.search(r"\d", low):
+        return False  # "my room", "mera room"
+    if not any(word in low for word in PLACE_WORDS):
+        return False
+    # A place word alone ("washroom") does not say which one. Needs a floor, a wing or
+    # some other qualifier next to it.
+    qualified = re.search(r"\d|ground|first|second|third|fourth|fifth|top|main|front|back"
+                          r"|north|south|east|west|upper|lower|new|old", low)
+    return bool(qualified) or len(low.split()) >= 2
+
+
+def canonical_building(name):
+    """Map whatever Gemma wrote onto one of cats.BUILDINGS, or None if it means nothing.
+
+    Without this, "BH2" and "BH2 (Gopad)" are different buildings to SQL, find_similar
+    never shows the existing complaint, and duplicate detection silently stops working.
+    """
+    if not name:
+        return None
+    low = " ".join(str(name).lower().split())
+    for building in cats.BUILDINGS:
+        if low == building.lower():
+            return building
+    for building in cats.BUILDINGS:
+        code = building.split(" (")[0].lower()                      # bh2
+        alias = building.split("(")[-1].rstrip(")").lower() if "(" in building else ""
+        if low in (code, alias) or low.startswith(code + " ") or (alias and alias in low):
+            return building
+        if code and low.replace(" ", "").startswith(code):           # "bh 2", "bh2 hostel"
+            return building
+    if "mess" in low:
+        return cats.DEFAULT_MESS
+    if "acad" in low or "lecture" in low or "class" in low:
+        return "Academic Building"
+    return None
 
 
 def resolve_category(name):
@@ -109,6 +151,7 @@ def find_similar(category: str, building: str = "", spot: str = "", meal: str = 
     """
     ctx = context()
     row = resolve_category(category)
+    building = canonical_building(building)
     if row["domain"] == "Mess":
         building = building or cats.DEFAULT_MESS
 
@@ -157,6 +200,7 @@ def file_new(category: str, severity: str, summary: str, details: str = "", buil
         return "Error: write a short neutral summary of 12 words or fewer."
 
     row = resolve_category(category)
+    building = canonical_building(building)
     if row["domain"] == "Mess":
         building = building or cats.DEFAULT_MESS
 
@@ -205,7 +249,8 @@ def merge_into(complaint_id: int, severity: str, reason: str, details: str = "")
     try:
         complaint = db.add_report(complaint_id, {
             "thread_id": ctx["thread_id"], "raw_text": ctx["raw_text"],
-            "photo_path": ctx["photo_path"], "severity": severity or None,
+            "language": ctx.get("language"), "photo_path": ctx["photo_path"],
+            "severity": severity or None,
             "outcome": "merged", "merge_reason": (reason or "").strip() or "Same issue",
             "followups": ctx["followups"],
         })

@@ -37,6 +37,14 @@ from . import tools as toolbox
 # losing half-finished conversations is an acceptable trade for having no extra moving parts.
 # Production would put this in Redis or a `threads` table.
 THREADS = {}
+MAX_THREADS = 200
+
+
+def _remember(thread_id, state):
+    """Save a paused run, discarding the oldest once there are too many."""
+    THREADS[thread_id] = state
+    while len(THREADS) > MAX_THREADS:
+        THREADS.pop(next(iter(THREADS)))
 
 
 @dataclass
@@ -173,9 +181,15 @@ class Agent:
             return RunResult(status="error", result="Error: that conversation has expired.")
 
         self.steps = list(state.get("steps") or [])
-        contents = state["contents"]
+        # A copy: a failed resume must not leave the saved conversation half-advanced,
+        # or a retry would send two responses for the same call.
+        contents = list(state["contents"])
         pending = state.get("pending") or {}
-        parts = []
+
+        # If the model asked for several tools in one turn, the ones that ran before the
+        # pause already have results. They have to go back in the SAME user turn, or the
+        # conversation has more function calls than function responses.
+        parts = list(state.get("pending_replies") or [])
         if pending:
             parts.append(types.Part(function_response=types.FunctionResponse(
                 id=pending.get("id"), name=pending["name"],
@@ -217,9 +231,10 @@ class Agent:
                 if toolbox.is_pause(call.name) and not failed:
                     question = args.get("question") or result
                     state = {"contents": contents, "pending": {"id": call.id, "name": call.name},
-                             "steps": self.steps, "thread_id": thread_id}
+                             "pending_replies": replies, "steps": list(self.steps),
+                             "thread_id": thread_id}
                     if thread_id:
-                        THREADS[thread_id] = state
+                        _remember(thread_id, state)
                     return RunResult(status="needs_input", tool=call.name, result=result,
                                      question=question, steps=self.steps, state=state)
 

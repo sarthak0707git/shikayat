@@ -10,9 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from starlette.concurrency import run_in_threadpool
 
 from api import db
 from complaints import categories as cats
+from complaints.agent import handle_answer, handle_report
 
 ROOT = Path(__file__).resolve().parent.parent
 UPLOADS = ROOT / "uploads"
@@ -114,55 +116,22 @@ def get_stats(domain: str | None = None):
 
 
 # ---------- reporting ----------
-# P1 wires the real Gemma agent in here. Until then these return a believable
-# ReportResult so the Report page can be built against the real URL from minute one.
-
-def _mock_result(text, thread_id):
-    """Shape-accurate stand-in. Deterministic on the text so the UI can be exercised."""
-    low = text.lower()
-    if "moon" in low or "test" in low:
-        return {"thread_id": thread_id, "status": "rejected",
-                "message": "This does not look like a campus issue, so we have not filed it.",
-                "question": None, "complaint": None,
-                "steps": [{"kind": "tool_call", "label": "Checking whether this is a campus issue"}]}
-    if "ac" in low.split() or "paani tapak" in low:
-        return {"thread_id": thread_id, "status": "needs_input",
-                "message": "Gemma needs one more detail.",
-                "question": "Kaunsa hostel aur room number?", "complaint": None,
-                "steps": [{"kind": "tool_call", "label": "Looking for similar reports"},
-                          {"kind": "tool_call", "label": "Asking the student for the missing details"}]}
-    top = db.stats()["top_issues"]
-    complaint = db.get_complaint(top[0]["id"]) if top else None
-    return {"thread_id": thread_id, "status": "merged",
-            "message": f"Added to #{complaint['id']}. You're the {complaint['report_count']}th student to report this."
-                       if complaint else "Filed.",
-            "question": None, "complaint": complaint,
-            "steps": [{"kind": "tool_call", "label": "Looking for similar reports"},
-                      {"kind": "tool_call", "label": "Merging into an existing complaint"}]}
-
+# Both of these run the real Gemma agent. It is synchronous and takes several seconds,
+# so it goes to a worker thread: on the event loop it would freeze every other request,
+# including the board polling while a judge is submitting a report.
 
 @app.post("/api/report")
 async def post_report(text: str = Form(...), photo: UploadFile | None = File(None)):
     if not text.strip():
         raise HTTPException(422, "Please write what the problem is.")
-    photo_path = _save_photo(photo)
+    photo_path = await run_in_threadpool(_save_photo, photo)
     thread_id = "t_" + uuid.uuid4().hex[:6]
-    try:
-        from complaints.agent import handle_report
-    except ImportError:
-        return JSONResponse(_mock_result(text, thread_id))
-    return JSONResponse(handle_report(text, photo_path=photo_path, thread_id=thread_id))
+    result = await run_in_threadpool(handle_report, text, photo_path=photo_path, thread_id=thread_id)
+    return JSONResponse(result)
 
 
 @app.post("/api/report/{thread_id}/answer")
 async def post_answer(thread_id: str, body: AnswerIn):
     if not body.answer.strip():
         raise HTTPException(422, "Please type an answer.")
-    try:
-        from complaints.agent import handle_answer
-    except ImportError:
-        result = _mock_result("filed after answer", thread_id)
-        result["status"] = "filed"
-        result["message"] = "Filed as a new complaint in the Hostel Office queue."
-        return JSONResponse(result)
-    return JSONResponse(handle_answer(thread_id, body.answer))
+    return JSONResponse(await run_in_threadpool(handle_answer, thread_id, body.answer))

@@ -313,7 +313,7 @@ def update_status(complaint_id, status, note=None):
 def stats(domain=None):
     conn = connect()
     where, params = ("WHERE domain = ?", [domain]) if domain else ("", [])
-    q = lambda sql, p=None: conn.execute(sql, p or params).fetchall()
+    q = lambda sql, p=None: conn.execute(sql, params if p is None else p).fetchall()
 
     counts = {r["status"]: r["n"] for r in q(f"SELECT status, COUNT(*) n FROM complaints {where} GROUP BY status")}
     today = datetime.now(IST)
