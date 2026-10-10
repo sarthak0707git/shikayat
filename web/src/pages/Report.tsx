@@ -159,9 +159,9 @@ export default function Report() {
   }
 
 
-  let orb: 'breathing' | 'searching' | 'composing' | 'listening' = 'breathing'
+  let orb: 'breathing' | 'working' | 'composing' | 'listening' = 'breathing'
   let status = 'Ready when you are'
-  if (busy === 'waiting') [orb, status] = ['searching', 'Working on it']
+  if (busy === 'waiting') orb = 'working'
   else if (busy === 'revealing') [orb, status] = ['composing', 'Writing it up']
   else if (asking) [orb, status] = ['listening', 'Waiting for your answer']
   else if (finished) status = 'Done. Next one?'
@@ -175,10 +175,14 @@ export default function Report() {
           {/* The composer is the one ink surface on the page: Gemma's desk. */}
           <div className="ink-card rounded-[2rem] bg-ink p-2 text-white">
             <div className="flex items-center gap-3 px-3 pt-2 pb-1">
-              <ThinkingOrb state={orb} size={64} theme="dark" paused={finished || busy === 'waiting'} aria-hidden="true" style={{ width: 48, height: 48 }} />
+              <ThinkingOrb state={orb} size={64} theme="dark" paused={finished} aria-hidden="true" style={{ width: 48, height: 48 }} />
               <p role="status" className="min-w-0">
                 <span className="block font-display text-lg leading-tight font-semibold tracking-tight">Gemma 4</span>
-                <span className="block truncate text-sm text-zinc-400">{status}</span>
+                {busy === 'waiting' ? (
+                  <Thinking hasPhoto={turns[0]?.kind === 'student' && Boolean(turns[0].photo)} />
+                ) : (
+                  <span className="block truncate text-sm text-zinc-400">{status}</span>
+                )}
               </p>
             </div>
 
@@ -234,8 +238,6 @@ export default function Report() {
                 {turns.map((turn, index) => (
                   <TurnView key={index} turn={turn} />
                 ))}
-
-                {busy === 'waiting' && <Thinking hasPhoto={turns[0]?.kind === 'student' && Boolean(turns[0].photo)} />}
 
                 {asking && (
                   <form onSubmit={reply} className="rise flex gap-2">
@@ -317,7 +319,7 @@ const THOUGHTS = [
   'Bas, likh rahe hain',
 ]
 
-/** Shown while the request is in flight, so a slow answer never looks like a frozen page. */
+/** The header's status line while the request is in flight: one readable line and a clock. */
 function Thinking({ hasPhoto }: { hasPhoto: boolean }) {
   const thoughts = hasPhoto ? [THOUGHTS[0], 'Photo dekh rahe hain', ...THOUGHTS.slice(1)] : THOUGHTS
   const [step, setStep] = useState(0)
@@ -333,18 +335,15 @@ function Thinking({ hasPhoto }: { hasPhoto: boolean }) {
   }, [thoughts.length])
 
   return (
-    <div className="rise flex items-center gap-2.5 px-1 text-sm text-zinc-300">
-      <ThinkingOrb state="searching" size={20} theme="dark" aria-hidden="true" />
-      <span key={step} className="rise" aria-hidden="true">
+    <span className="flex items-baseline gap-2 text-sm text-zinc-300">
+      <span key={step} className="rise truncate" aria-hidden="true">
         {thoughts[step]}
       </span>
       <span className="text-zinc-500 tabular-nums" aria-hidden="true">
         {seconds}s
       </span>
-      <span role="status" className="sr-only">
-        Gemma is working on your report
-      </span>
-    </div>
+      <span className="sr-only">Working on your report</span>
+    </span>
   )
 }
 
