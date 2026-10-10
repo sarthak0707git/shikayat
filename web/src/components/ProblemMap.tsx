@@ -16,7 +16,9 @@ const RAMP = [
  * A mosaic of where the reports are. A domain's block grows with its share of all open
  * reports; inside it, each kind of problem grows with its share of that domain.
  */
-export function ProblemMap({ complaints }: { complaints?: Complaint[] }) {
+type ProblemMapProps = { complaints?: Complaint[]; selected?: string; onPick?: (domain: string) => void }
+
+export function ProblemMap({ complaints, selected, onPick }: ProblemMapProps) {
   const domains = new Map<string, Map<string, number>>()
   for (const c of complaints ?? []) {
     if (c.status === 'resolved') continue
@@ -41,7 +43,7 @@ export function ProblemMap({ complaints }: { complaints?: Complaint[] }) {
             Where it hurts
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">
-            Every open report, by domain and kind of problem. Bigger block, more students affected.
+            Every open report, by domain and kind of problem. Bigger block, more students affected. Click a domain to {selected ? 'clear the filter' : 'filter the board'}.
           </p>
         </div>
         {complaints && grand > 0 && (
@@ -60,7 +62,21 @@ export function ProblemMap({ complaints }: { complaints?: Complaint[] }) {
           {blocks.map((block, index) => {
             const tone = RAMP[Math.min(index, RAMP.length - 1)]
             return (
-              <div key={block.domain} className="flex min-h-0 min-w-0 basis-0 flex-col gap-1.5" style={{ flexGrow: block.total }}>
+              <div
+                key={block.domain}
+                role="button"
+                tabIndex={0}
+                aria-label={`${block.domain}: ${block.total} open reports. ${selected === block.domain ? 'Clear the filter' : 'Filter the board to this domain'}`}
+                onClick={() => onPick?.(block.domain)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    onPick?.(block.domain)
+                  }
+                }}
+                className="press flex min-h-0 min-w-0 basis-0 cursor-pointer flex-col gap-1.5 rounded-xl"
+                style={{ flexGrow: block.total }}
+              >
                 <p className="flex items-baseline justify-between gap-2 text-xs font-semibold text-ink">
                   <span className="truncate">{block.domain}</span>
                   <span className="text-zinc-500 tabular-nums">{Math.round((block.total / grand) * 100)}%</span>

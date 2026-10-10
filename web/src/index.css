@@ -185,3 +185,24 @@ body {
     transition: none;
   }
 }
+
+/* A board row that just changed: a wash of indigo that holds, then fades. Opacity only. */
+@keyframes flash {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.flash::before {
+  content: "";
+  position: absolute;
+  inset: 2px -12px;
+  border-radius: 1rem;
+  background: #e0e7ff;
+  box-shadow: 0 0 0 2px #6366f1;
+  pointer-events: none;
+  animation: flash 2.8s linear forwards;
+}
