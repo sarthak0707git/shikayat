@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { toast } from 'sonner'
+import { ByDomain, Daily } from '../components/BoardCharts'
 import { Button, CountBadge, cx, EmptyState, PageHeader, SEVERITY_FILL, SeverityTag, Skeleton, StatusPill } from '../components/ui'
 import { api } from '../lib/api'
 import { place, plural, timeAgo } from '../lib/format'
@@ -66,7 +67,13 @@ export default function Board() {
       ) : (
         <>
           <Kpis stats={stats} />
-          <TopPriority items={complaints ? active.slice(0, 8) : undefined} />
+          <div className="grid gap-x-12 lg:grid-cols-[3fr_2fr]">
+            <TopPriority items={complaints ? active.slice(0, 8) : undefined} />
+            <div className="border-t border-zinc-200 lg:border-t-0">
+              <ByDomain rows={domain ? stats?.by_domain.filter((row) => row.domain === domain) : stats?.by_domain} />
+              <Daily days={stats?.daily} />
+            </div>
+          </div>
           <Ranked active={complaints ? active : undefined} resolved={resolved} />
         </>
       )}
