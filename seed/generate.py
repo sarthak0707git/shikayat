@@ -1,6 +1,10 @@
 """Generates a valid baseline seed/complaints.json. P3 replaces/expands this by hand.
 
     python seed/generate.py          # writes seed/complaints.json
+
+NOTE: complaints.json has been hand-edited by P3 since this generator last ran
+(raw texts rewritten for realism, spot "lecture hall LH-2"). Re-running this
+script OVERWRITES those edits -- update the texts here first or edit the JSON.
 """
 import json, random
 from datetime import datetime, timedelta, timezone

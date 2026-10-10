@@ -305,7 +305,7 @@
     {
       "category": "Classrooms & Labs",
       "building": "Academic Building",
-      "spot": "LH-2",
+      "spot": "lecture hall LH-2",
       "meal": null,
       "summary": "Projector not working in lecture hall",
       "details": "The projector in the hall does not display.",
@@ -511,12 +511,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Light switch sparking in room B201.",
+          "raw_text": "The light switch in B201 sparks every time we plug something in.",
           "language": "en",
           "created_at": "2026-09-27T11:00:00+05:30"
         },
         {
-          "raw_text": "light switch sparking in room b201 - kuch karo bhai",
+          "raw_text": "B201 ka switchboard spark kar raha hai plug lagate hi, bijli gir sakti hai",
           "language": "hinglish",
           "created_at": "2026-09-29T13:00:00+05:30"
         }
@@ -535,12 +535,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "ac not cooling in room f304 - bahut problem ho rahi hai",
+          "raw_text": "F304 ki AC sirf hawa de rahi hai, thandi bilkul nahi",
           "language": "hinglish",
           "created_at": "2026-09-30T10:00:00+05:30"
         },
         {
-          "raw_text": "AC not cooling in room F304.",
+          "raw_text": "AC in F304 has stopped cooling completely.",
           "language": "en",
           "created_at": "2026-10-02T15:00:00+05:30"
         }
@@ -559,17 +559,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Tube light flickering in corridor.",
+          "raw_text": "One tube light on the 2nd floor corridor keeps flickering all night.",
           "language": "en",
           "created_at": "2026-10-03T11:00:00+05:30"
         },
         {
-          "raw_text": "tube light flickering in corridor - jaldi dekh lo",
+          "raw_text": "2nd floor corridor ki tube light blink karti rehti hai raat bhar",
           "language": "hinglish",
           "created_at": "2026-10-05T13:00:00+05:30"
         },
         {
-          "raw_text": "Tube light flickering in corridor.",
+          "raw_text": "Corridor tube light on 2F is still flickering.",
           "language": "en",
           "created_at": "2026-10-07T19:00:00+05:30"
         }
@@ -588,7 +588,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "tap leaking in 2nd-floor washroom - please isko fix karo",
+          "raw_text": "GH1 ki 2F washroom ka tap leak ho raha hai, poora floor geela rehta hai",
           "language": "hinglish",
           "created_at": "2026-10-06T10:00:00+05:30"
         }
@@ -607,12 +607,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Blocked drain in ground-floor washroom.",
+          "raw_text": "Ground floor washroom drain is blocked, water doesn't go down at all.",
           "language": "en",
           "created_at": "2026-10-09T11:00:00+05:30"
         },
         {
-          "raw_text": "blocked drain in ground-floor washroom - theek karwa do please",
+          "raw_text": "BH1 ground floor washroom ka drain choke ho gaya hai, paani bahar aa raha hai",
           "language": "hinglish",
           "created_at": "2026-09-28T13:00:00+05:30"
         }
@@ -631,22 +631,22 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "low water pressure in room d305 - theek karwa do please",
+          "raw_text": "D305 me paani ka pressure bahut low hai, mug bharne me time lagta hai",
           "language": "hinglish",
           "created_at": "2026-09-29T10:00:00+05:30"
         },
         {
-          "raw_text": "Low water pressure in room D305.",
+          "raw_text": "Very low water pressure in room D305 since the past week.",
           "language": "en",
           "created_at": "2026-10-01T15:00:00+05:30"
         },
         {
-          "raw_text": "low water pressure in room d305 - kaafi dino se aisa hai",
+          "raw_text": "upar floor pe pressure aur kharab hai, D305 me to bilkul trickle",
           "language": "hinglish",
           "created_at": "2026-10-03T16:00:00+05:30"
         },
         {
-          "raw_text": "Low water pressure in room D305.",
+          "raw_text": "Water pressure in D305 is barely a trickle now.",
           "language": "en",
           "created_at": "2026-10-05T13:00:00+05:30"
         }
@@ -665,7 +665,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Broken chair in room E112.",
+          "raw_text": "The chair in E112 has a broken leg and keeps toppling over.",
           "language": "en",
           "created_at": "2026-10-02T11:00:00+05:30"
         }
@@ -684,12 +684,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "window latch broken in room a227 - theek karwa do please",
+          "raw_text": "A227 ka window latch toot gaya hai, band hi nahi hota",
           "language": "hinglish",
           "created_at": "2026-10-05T10:00:00+05:30"
         },
         {
-          "raw_text": "Window latch broken in room A227.",
+          "raw_text": "Window latch in A227 is broken, the window rattles in the wind.",
           "language": "en",
           "created_at": "2026-10-07T15:00:00+05:30"
         }
@@ -708,17 +708,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Study table wobbling in room B322.",
+          "raw_text": "The study table in B322 wobbles on one leg.",
           "language": "en",
           "created_at": "2026-10-08T11:00:00+05:30"
         },
         {
-          "raw_text": "study table wobbling in room b322 - kuch karo bhai",
+          "raw_text": "B322 ki study table hil-ti rehti hai, likhna mushkil ho jata hai",
           "language": "hinglish",
           "created_at": "2026-09-27T13:00:00+05:30"
         },
         {
-          "raw_text": "Study table wobbling in room B322.",
+          "raw_text": "Table leg is loose again in B322.",
           "language": "en",
           "created_at": "2026-09-29T19:00:00+05:30"
         }
@@ -737,7 +737,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "garbage not collected from corridor - kaafi dino se aisa hai",
+          "raw_text": "3rd floor corridor ka kachra 3 din se nahi uthaya, smell aa rahi hai",
           "language": "hinglish",
           "created_at": "2026-09-28T10:00:00+05:30"
         }
@@ -756,17 +756,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Dust and cobwebs in the common room.",
+          "raw_text": "Common room in MSH is full of dust and cobwebs.",
           "language": "en",
           "created_at": "2026-10-01T11:00:00+05:30"
         },
         {
-          "raw_text": "dust and cobwebs in the common room - theek karwa do please",
+          "raw_text": "MSH common room me jhaadu kab aayegi, dharr me baith nahi sakte",
           "language": "hinglish",
           "created_at": "2026-10-03T13:00:00+05:30"
         },
         {
-          "raw_text": "Dust and cobwebs in the common room.",
+          "raw_text": "Cobwebs everywhere in the MSH common room.",
           "language": "en",
           "created_at": "2026-10-05T19:00:00+05:30"
         }
@@ -785,17 +785,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "watery dal served at lunch - kaafi dino se aisa hai",
+          "raw_text": "aaj ki dal me paani hi paani tha, chammak hi nahi rahi",
           "language": "hinglish",
           "created_at": "2026-10-04T10:00:00+05:30"
         },
         {
-          "raw_text": "Watery dal served at lunch.",
+          "raw_text": "Today's dal at lunch was watery and tasteless.",
           "language": "en",
           "created_at": "2026-10-06T15:00:00+05:30"
         },
         {
-          "raw_text": "watery dal served at lunch - bahut problem ho rahi hai",
+          "raw_text": "dal roz aisi patli aa rahi hai lunch me",
           "language": "hinglish",
           "created_at": "2026-10-08T16:00:00+05:30"
         }
@@ -814,7 +814,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Stale bread at breakfast.",
+          "raw_text": "Bread at breakfast was stale and hard today.",
           "language": "en",
           "created_at": "2026-10-07T11:00:00+05:30"
         }
@@ -833,12 +833,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "dirty plates stacked at the washing area - theek karwa do please",
+          "raw_text": "dinner ke baad plates gandi padi thi washing area me",
           "language": "hinglish",
           "created_at": "2026-09-27T10:00:00+05:30"
         },
         {
-          "raw_text": "Dirty plates stacked at the washing area.",
+          "raw_text": "Dirty plates are stacked at the mess washing area.",
           "language": "en",
           "created_at": "2026-09-29T15:00:00+05:30"
         }
@@ -857,17 +857,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Unclean water jugs on mess tables.",
+          "raw_text": "Water jugs on the mess tables were sticky and unclean.",
           "language": "en",
           "created_at": "2026-09-30T11:00:00+05:30"
         },
         {
-          "raw_text": "unclean water jugs on mess tables - theek karwa do please",
+          "raw_text": "mess ke jugs par dagg hai, saaf karwao please",
           "language": "hinglish",
           "created_at": "2026-10-02T13:00:00+05:30"
         },
         {
-          "raw_text": "Unclean water jugs on mess tables.",
+          "raw_text": "The water jugs on the tables still look unwashed.",
           "language": "en",
           "created_at": "2026-10-04T19:00:00+05:30"
         }
@@ -886,12 +886,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "long queue at breakfast every day - jaldi dekh lo",
+          "raw_text": "breakfast me line bahut lambi lagti hai, class late ho jati hai",
           "language": "hinglish",
           "created_at": "2026-10-03T10:00:00+05:30"
         },
         {
-          "raw_text": "Long queue at breakfast every day.",
+          "raw_text": "There is a long queue at breakfast every single day.",
           "language": "en",
           "created_at": "2026-10-05T15:00:00+05:30"
         }
@@ -910,12 +910,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Slow Wi-Fi in the library reading hall.",
+          "raw_text": "Wi-Fi in the library reading hall is painfully slow.",
           "language": "en",
           "created_at": "2026-10-06T11:00:00+05:30"
         },
         {
-          "raw_text": "slow wi-fi in the library reading hall - jaldi dekh lo",
+          "raw_text": "library reading hall ka wifi itna slow hai, pdf hi nahi khul rahi",
           "language": "hinglish",
           "created_at": "2026-10-08T13:00:00+05:30"
         }
@@ -934,17 +934,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "lan port dead in room c208 - theek karwa do please",
+          "raw_text": "C208 ka LAN port dead hai, wifi bhi drop karta rehta hai",
           "language": "hinglish",
           "created_at": "2026-10-09T10:00:00+05:30"
         },
         {
-          "raw_text": "LAN port dead in room C208.",
+          "raw_text": "LAN port in C208 stopped working.",
           "language": "en",
           "created_at": "2026-09-28T15:00:00+05:30"
         },
         {
-          "raw_text": "lan port dead in room c208 - bahut problem ho rahi hai",
+          "raw_text": "C208 me LAN kab theek hoga, assignment submit nahi ho pa raha",
           "language": "hinglish",
           "created_at": "2026-09-30T16:00:00+05:30"
         }
@@ -963,7 +963,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Grade card not loading on the portal.",
+          "raw_text": "My grade card is not loading on the portal since morning.",
           "language": "en",
           "created_at": "2026-09-29T11:00:00+05:30"
         }
@@ -982,12 +982,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "broken benches in the chemistry lab - theek karwa do please",
+          "raw_text": "chemistry lab ki benches toot gayi hain, baithna mushkil",
           "language": "hinglish",
           "created_at": "2026-10-02T10:00:00+05:30"
         },
         {
-          "raw_text": "Broken benches in the chemistry lab.",
+          "raw_text": "Several benches in the chemistry lab are broken.",
           "language": "en",
           "created_at": "2026-10-04T15:00:00+05:30"
         }
@@ -1006,22 +1006,22 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "AC not working in the computer lab.",
+          "raw_text": "The AC in the computer lab is not working, lab is like an oven.",
           "language": "en",
           "created_at": "2026-10-05T11:00:00+05:30"
         },
         {
-          "raw_text": "ac not working in the computer lab - kaafi dino se aisa hai",
+          "raw_text": "computer lab ka AC band hai, machines bhi overheat ho rahi hain",
           "language": "hinglish",
           "created_at": "2026-10-07T13:00:00+05:30"
         },
         {
-          "raw_text": "AC not working in the computer lab.",
+          "raw_text": "Still no AC in the computer lab.",
           "language": "en",
           "created_at": "2026-10-09T19:00:00+05:30"
         },
         {
-          "raw_text": "ac not working in the computer lab - jaldi dekh lo",
+          "raw_text": "computer lab me garmi se baitha nahi ja raha, AC dekho jaldi",
           "language": "hinglish",
           "created_at": "2026-09-28T19:00:00+05:30"
         }
@@ -1040,7 +1040,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "water cooler leaking near the mess - theek karwa do please",
+          "raw_text": "mess ke bahar wala cooler leak kar raha hai, paani poora area me fail raha hai",
           "language": "hinglish",
           "created_at": "2026-10-08T10:00:00+05:30"
         }
@@ -1059,12 +1059,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "No drinking water point in the academic lobby.",
+          "raw_text": "There is no drinking water point in the academic building lobby.",
           "language": "en",
           "created_at": "2026-09-28T11:00:00+05:30"
         },
         {
-          "raw_text": "no drinking water point in the academic lobby - kaafi dino se aisa hai",
+          "raw_text": "academic lobby me peene ka paani tak nahi hai, canteen tak jana padta hai",
           "language": "hinglish",
           "created_at": "2026-09-30T13:00:00+05:30"
         }
@@ -1083,17 +1083,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "pothole on the road to the hostels - theek karwa do please",
+          "raw_text": "hostel road pe bada pothole hai, bike phas jati hai usme",
           "language": "hinglish",
           "created_at": "2026-10-01T10:00:00+05:30"
         },
         {
-          "raw_text": "Pothole on the road to the hostels.",
+          "raw_text": "A large pothole on the hostel approach road has widened.",
           "language": "en",
           "created_at": "2026-10-03T15:00:00+05:30"
         },
         {
-          "raw_text": "pothole on the road to the hostels - bahut problem ho rahi hai",
+          "raw_text": "approach road ka pothole ab aur ho gaya hai, baarish me paani bhar jata hai",
           "language": "hinglish",
           "created_at": "2026-10-05T16:00:00+05:30"
         }
@@ -1112,7 +1112,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Broken paver blocks near the canteen.",
+          "raw_text": "Paver blocks near the canteen walkway are broken and uneven.",
           "language": "en",
           "created_at": "2026-10-04T11:00:00+05:30"
         }
@@ -1131,17 +1131,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "campus bus skipped the evening trip - please isko fix karo",
+          "raw_text": "kal evening ki bus chhod di, sab gate pe late se wait karte rahe",
           "language": "hinglish",
           "created_at": "2026-10-07T10:00:00+05:30"
         },
         {
-          "raw_text": "Campus bus skipped the evening trip.",
+          "raw_text": "The evening campus bus was skipped again yesterday.",
           "language": "en",
           "created_at": "2026-10-09T15:00:00+05:30"
         },
         {
-          "raw_text": "campus bus skipped the evening trip - please isko fix karo",
+          "raw_text": "bus waale bina bataye trip skip kar dete hain, raat ko aana mushkil",
           "language": "hinglish",
           "created_at": "2026-09-28T16:00:00+05:30"
         }
@@ -1160,17 +1160,17 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Bus timings not displayed at the stop.",
+          "raw_text": "Bus timings are not displayed anywhere at the main gate stop.",
           "language": "en",
           "created_at": "2026-09-27T11:00:00+05:30"
         },
         {
-          "raw_text": "bus timings not displayed at the stop - kaafi dino se aisa hai",
+          "raw_text": "bus stop pe timings ka board hi nahi hai, kab aayegi pata nahi",
           "language": "hinglish",
           "created_at": "2026-09-29T13:00:00+05:30"
         },
         {
-          "raw_text": "Bus timings not displayed at the stop.",
+          "raw_text": "Please put up a timetable at the bus stop.",
           "language": "en",
           "created_at": "2026-10-01T19:00:00+05:30"
         }
@@ -1189,7 +1189,7 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "monkeys entering hostel balconies - theek karwa do please",
+          "raw_text": "BH1 ki 4th floor balcony me bandar chadh gaye, kapde le liye",
           "language": "hinglish",
           "created_at": "2026-09-30T10:00:00+05:30"
         }
@@ -1208,12 +1208,12 @@
       "resolution_note": null,
       "reports": [
         {
-          "raw_text": "Snake spotted near the sports ground.",
+          "raw_text": "A snake was spotted near the sports ground this evening.",
           "language": "en",
           "created_at": "2026-10-03T11:00:00+05:30"
         },
         {
-          "raw_text": "snake spotted near the sports ground - kaafi dino se aisa hai",
+          "raw_text": "sports ground ke paas saamp dekha gaya, bachchon ko door rehna chahiye",
           "language": "hinglish",
           "created_at": "2026-10-05T13:00:00+05:30"
         }

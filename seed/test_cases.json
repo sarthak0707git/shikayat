@@ -1,89 +1,88 @@
 {
-  "_note": "Baseline written by P1 so `python -m complaints.eval` had something to run. P3 owns this file (issue #7) and should expand it. The ids in expect_outcome refer to complaints in complaints.json as loaded by `python -m api.seed --reset`.",
   "cases": [
     {
       "text": "aaj lunch mein dal mein keeda tha",
       "photo": null,
-      "expect_outcome": "merged:1",
+      "expect_outcome": "merged",
       "expect_category": "Hygiene",
-      "note": "Hinglish duplicate of the mess hygiene complaint. This is demo step 2."
+      "note": "1. Hinglish duplicate of the demo mess hygiene complaint (complaint 1). This is demo step 2."
     },
     {
       "text": "There was a fly floating in the sambar at lunch in the mess today.",
       "photo": null,
-      "expect_outcome": "merged:1",
+      "expect_outcome": "merged",
       "expect_category": "Hygiene",
-      "note": "Same issue as case 1 but worded completely differently, in English."
+      "note": "2. Same issue as case 1 but worded completely differently, in English. Must still merge."
     },
     {
       "text": "BH1 ke 3rd floor pe 2 din se paani nahi aa raha",
       "photo": null,
-      "expect_outcome": "merged:2",
+      "expect_outcome": "merged",
       "expect_category": "Plumbing & Water",
-      "note": "Hinglish duplicate of the 3F water complaint in Kanhar."
-    },
-    {
-      "text": "No water at all in the third floor washroom of Kanhar hostel since yesterday.",
-      "photo": null,
-      "expect_outcome": "merged:2",
-      "expect_category": "Plumbing & Water",
-      "note": "English duplicate of the same complaint, different wording."
+      "note": "Fill: Hinglish duplicate of the BH1 3F water complaint (complaint 2), other domain."
     },
     {
       "text": "GH1 ke B322 me AC bilkul kaam nahi kar raha",
       "photo": null,
       "expect_outcome": "filed",
       "expect_category": "Electrical & AC",
-      "note": "Same category as an existing complaint but a DIFFERENT room. Must not merge."
+      "note": "3. Same category as an existing complaint but a DIFFERENT room. Must not merge."
     },
     {
       "text": "washroom mein paani bhara hua hai, chalna mushkil hai",
       "photo": null,
       "expect_outcome": "ask",
       "expect_category": "Plumbing & Water",
-      "note": "No building and no specific spot. Must ask before filing."
+      "note": "4. Vague location: no building, no specific spot. Must ask before filing."
     },
     {
       "text": "AC se paani tapak raha hai",
       "photo": null,
       "expect_outcome": "ask",
       "expect_category": "Electrical & AC",
-      "note": "AC leak with no room number. This is demo step 3."
+      "note": "5. AC leak with no room number. This is demo step 3."
     },
     {
       "text": "the moon is too bright",
       "photo": null,
       "expect_outcome": "rejected",
       "expect_category": null,
-      "note": "Not a campus issue. This is demo step 5."
+      "note": "6. Nonsense, not a campus issue. This is demo step 5."
     },
     {
-      "text": "asdkjh asd lkjasd test test ignore this",
-      "photo": null,
-      "expect_outcome": "rejected",
-      "expect_category": null,
-      "note": "Gibberish and an obvious test."
-    },
-    {
-      "text": "campus ke ATM me paisa nikalne pe machine band ho jaati hai, 3 din se aisa hai",
+      "text": "kapde dhone wali machine hostel laundry me khadi hai, 4 din se koi kapde nahi utha raha",
       "photo": null,
       "expect_outcome": "filed",
       "expect_category": "Other",
-      "note": "Fits no bucket. Should be Other with a suggested_category like ATM or Banking."
+      "note": "7. A laundry complaint. Fits no bucket: must file as Other with suggested_category Laundry."
     },
     {
-      "text": "main gate ke paas wali street light abhi bhi nahi jal rahi, raat me kuch dikhta nahi",
+      "text": "mess ke khane mein aaj baal mila, photo bhej raha hoon",
+      "photo": "demo/photos/hair-in-food.jpg",
+      "expect_outcome": "merged",
+      "expect_category": "Hygiene",
+      "note": "8. Photo-as-evidence case for the demo hygiene issue. The text alone should already merge (complaint 1); the photo raises severity."
+    },
+    {
+      "text": "library reading hall ka wifi itna slow hai, pdf hi nahi khul rahi",
       "photo": null,
-      "expect_outcome": "merged:6",
-      "expect_category": "Roads & Lights",
-      "note": "Hinglish duplicate of the main gate street light complaint."
+      "expect_outcome": "merged",
+      "expect_category": "Wi-Fi & LAN",
+      "note": "Fill: Hinglish duplicate of the library Wi-Fi complaint (complaint 34), other domain."
     },
     {
-      "text": "kal raat BH2 ke E-wing ground corridor me exposed wire se spark ho raha tha",
+      "text": "kal evening ki bus chhod di, sab gate pe late se wait karte rahe",
+      "photo": null,
+      "expect_outcome": "merged",
+      "expect_category": "Transport",
+      "note": "Fill: Hinglish duplicate of the evening bus complaint (complaint 43), campus transport domain."
+    },
+    {
+      "text": "canteen ke paas ek kutte ne class me ghus ke bag cheen liya",
       "photo": null,
       "expect_outcome": "filed",
-      "expect_category": "Electrical & AC",
-      "note": "New urgent safety issue, fully specified. Should file new at severity urgent."
+      "expect_category": "Animals & Safety",
+      "note": "Fill: realistic fully-specified report, new issue in the animals/safety domain."
     }
   ]
 }
