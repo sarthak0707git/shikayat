@@ -91,8 +91,9 @@ export default function Report() {
     setTurns([{ kind: 'student', text: message, photo: photo?.url }])
     setBusy('waiting')
     try {
-      await play(await api.sendReport(message, photo?.blob))
-      setText('')
+      const result = await api.sendReport(message, photo?.blob)
+      await play(result)
+      if (result.status !== 'error') setText('') // keep the text so "Try again" has it
     } catch (error) {
       setTurns([]) // back to the composer, with the text still there
       toast.error(error instanceof Error ? error.message : 'Something went wrong. Please try again.')
@@ -138,11 +139,13 @@ export default function Report() {
     if (fileRef.current) fileRef.current.value = ''
   }
 
-  function reset() {
-    removePhoto()
+  function reset(keepDraft = false) {
+    if (!keepDraft) {
+      removePhoto()
+      setText('')
+    }
     setTurns([])
     setThreadId(null)
-    setText('')
     setAnswer('')
     requestAnimationFrame(() => textRef.current?.focus())
   }
@@ -260,9 +263,15 @@ export default function Report() {
 
           {finished && (
             <div className="rise flex flex-wrap gap-2 pt-2">
-              <Button size="lg" onClick={reset}>
-                Report another
-              </Button>
+              {last.result.status === 'error' ? (
+                <Button size="lg" onClick={() => reset(true)}>
+                  Try again
+                </Button>
+              ) : (
+                <Button size="lg" onClick={() => reset()}>
+                  Report another
+                </Button>
+              )}
               <Link
                 to="/board"
                 className="press inline-flex h-11 items-center gap-2 rounded-[10px] px-4 text-sm font-medium text-indigo-700 transition-colors duration-150 hover:bg-indigo-50"
