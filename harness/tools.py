@@ -14,14 +14,28 @@ import typing
 from datetime import datetime
 from pathlib import Path
 
-TOOLS = {}  # tool name -> {"func": the function, "declaration": what we tell the model}
+TOOLS = {}  # tool name -> {"func": ..., "declaration": ..., "stop": bool, "pause": bool}
 
 _TYPE_NAMES = {str: "string", int: "integer", float: "number", bool: "boolean"}
 NOTES_FILE = Path(__file__).resolve().parent.parent / "notes" / "notes.txt"
 
 
-def tool(func):
-    """Register a function as a tool the model can ask for."""
+def tool(func=None, *, stop=False, pause=False):
+    """Register a function as a tool the model can ask for.
+
+    Plain:              @tool
+    Ends the run:       @tool(stop=True)    the run returns this result, with no extra model round
+    Waits for a human:  @tool(pause=True)   the run returns status="needs_input" and can be resumed
+
+    A stop or pause tool whose result starts with "Error" does NOT end the run: the model sees the
+    error and gets to try again. That is how the limits in complaints/tools.py are enforced.
+    """
+    if func is None:  # used as @tool(stop=True)
+        return lambda f: _register(f, stop=stop, pause=pause)
+    return _register(func, stop=stop, pause=pause)
+
+
+def _register(func, stop=False, pause=False):
     hints = typing.get_type_hints(func)
     docstring = inspect.cleandoc(func.__doc__ or "")
     properties, required = {}, []
@@ -39,12 +53,32 @@ def tool(func):
     declaration = {"name": func.__name__, "description": docstring.split("\n\n")[0].replace("\n", " ")}
     if properties:
         declaration["parameters"] = {"type": "object", "properties": properties, "required": required}
-    TOOLS[func.__name__] = {"func": func, "declaration": declaration}
+    TOOLS[func.__name__] = {"func": func, "declaration": declaration, "stop": stop, "pause": pause}
     return func
 
 
-def get_declarations():
-    return [t["declaration"] for t in TOOLS.values()]
+def get_declarations(names=None):
+    """Declarations for `names`, or for every registered tool when names is None.
+
+    Sending only the tools an agent actually needs keeps the model from wandering into
+    unrelated ones, and makes the request smaller.
+    """
+    if names is None:
+        return [t["declaration"] for t in TOOLS.values()]
+    missing = [n for n in names if n not in TOOLS]
+    if missing:
+        raise KeyError(f"No such tool(s): {', '.join(missing)}")
+    return [TOOLS[n]["declaration"] for n in names]
+
+
+def is_stop(name):
+    """True if a successful result from this tool should end the run."""
+    return bool(TOOLS.get(name, {}).get("stop"))
+
+
+def is_pause(name):
+    """True if this tool hands control back to a human."""
+    return bool(TOOLS.get(name, {}).get("pause"))
 
 
 def _convert(py_type, value):

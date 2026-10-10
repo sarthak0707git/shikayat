@@ -1,4 +1,4 @@
-from .agent import Agent
+from .agent import Agent, RunResult, THREADS
 from .tools import tool
 
-__all__ = ["Agent", "tool"]
+__all__ = ["Agent", "RunResult", "THREADS", "tool"]
