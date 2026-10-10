@@ -1,4 +1,4 @@
-# Shikayat — campus complaints that count
+# Shikayat: campus complaints that count
 
 A student reports a campus problem in English, Hinglish or Hindi, optionally with a photo.
 **Gemma 4** buckets it, summarises it, works out whether it is already open, merges duplicates,
