@@ -58,7 +58,7 @@
     },
     {
       "text": "mess ke khane mein aaj baal mila, photo bhej raha hoon",
-      "photo": "demo/photos/hair-in-food.jpg",
+      "photo": "demo/photos/mess-thali.jpg",
       "expect_outcome": "merged",
       "expect_category": "Hygiene",
       "note": "8. Photo-as-evidence case for the demo hygiene issue. The text alone should already merge (complaint 1); the photo raises severity."
