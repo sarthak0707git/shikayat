@@ -19,6 +19,14 @@ body {
   @apply bg-paper font-sans text-zinc-900 antialiased;
 }
 
+/* Tailwind v4 leaves buttons with the default arrow cursor. */
+button:not(:disabled),
+[role="button"],
+select,
+a {
+  cursor: pointer;
+}
+
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-indigo-600;
 }

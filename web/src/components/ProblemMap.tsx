@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react'
 import type { Complaint } from '../types'
 import { cx, EmptyState, Skeleton } from './ui'
 
-// One step of the ink-to-indigo ramp per domain, darkest for the busiest.
+// One fixed step of the ink-to-indigo ramp per domain, so a domain keeps its colour whatever is selected.
 const RAMP = [
   { fill: '#0d0c14', text: 'text-white', sub: 'text-zinc-400' },
   { fill: '#312e81', text: 'text-white', sub: 'text-indigo-200' },
@@ -11,6 +11,15 @@ const RAMP = [
   { fill: '#c7d2fe', text: 'text-ink', sub: 'text-indigo-900' },
   { fill: '#e7e5e4', text: 'text-ink', sub: 'text-zinc-600' },
 ]
+
+const TONE: Record<string, (typeof RAMP)[number]> = {
+  Hostel: RAMP[0],
+  Campus: RAMP[1],
+  Mess: RAMP[2],
+  IT: RAMP[3],
+  Academic: RAMP[4],
+  Other: RAMP[5],
+}
 
 /**
  * A mosaic of where the reports are. A domain's block grows with its share of all open
@@ -59,8 +68,9 @@ export function ProblemMap({ complaints, selected, onPick }: ProblemMapProps) {
         <EmptyState title="Nothing open here" hint="No open reports in this domain right now." />
       ) : (
         <div className="flex h-[34rem] flex-col gap-1.5 sm:h-[22rem] sm:flex-row">
-          {blocks.map((block, index) => {
-            const tone = RAMP[Math.min(index, RAMP.length - 1)]
+          {blocks.map((block) => {
+            const tone = TONE[block.domain] ?? RAMP[5]
+            const dim = Boolean(selected) && selected !== block.domain
             return (
               <div
                 key={block.domain}
@@ -74,7 +84,7 @@ export function ProblemMap({ complaints, selected, onPick }: ProblemMapProps) {
                     onPick?.(block.domain)
                   }
                 }}
-                className="press flex min-h-0 min-w-0 basis-0 cursor-pointer flex-col gap-1.5 rounded-xl"
+                className={cx('flex min-h-0 min-w-0 basis-0 flex-col gap-1.5 rounded-xl transition-opacity duration-200', dim ? 'opacity-25 hover:opacity-60' : 'opacity-100')}
                 style={{ flexGrow: block.total }}
               >
                 <p className="flex items-baseline justify-between gap-2 text-xs font-semibold text-ink">

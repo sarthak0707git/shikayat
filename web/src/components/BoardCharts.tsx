@@ -1,7 +1,7 @@
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { formatShortDate } from '../lib/format'
 import type { Stats } from '../types'
-import { EmptyState, Skeleton } from './ui'
+import { cx, EmptyState, Skeleton } from './ui'
 
 // Same hues as the status pills: open slate, in progress blue, resolved green.
 const STATUS_PARTS = [
@@ -10,7 +10,9 @@ const STATUS_PARTS = [
   { key: 'resolved', label: 'Resolved', className: 'bg-green-500' },
 ] as const
 
-export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
+type ByDomainProps = { rows?: Stats['by_domain']; selected?: string; onPick?: (domain: string) => void }
+
+export function ByDomain({ rows, selected, onPick }: ByDomainProps) {
   const max = Math.max(1, ...(rows ?? []).map((row) => row.open + row.in_progress + row.resolved))
   return (
     <section aria-labelledby="by-domain">
@@ -32,11 +34,26 @@ export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
       ) : rows.length === 0 ? (
         <EmptyState title="No complaints in this domain" />
       ) : (
-        <ul className="flex flex-col gap-3">
+        <ul className="flex flex-col gap-1">
           {rows.map((row) => {
             const total = row.open + row.in_progress + row.resolved
             return (
-              <li key={row.domain} className="grid grid-cols-[5rem_minmax(0,1fr)_2rem] items-center gap-3 text-sm">
+              <li
+                key={row.domain}
+                role="button"
+                tabIndex={0}
+                onClick={() => onPick?.(row.domain)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault()
+                    onPick?.(row.domain)
+                  }
+                }}
+                className={cx(
+                  '-mx-2 grid grid-cols-[5rem_minmax(0,1fr)_2rem] items-center gap-3 rounded-lg px-2 py-1 text-sm transition-[opacity,background-color] duration-200 hover:bg-zinc-900/[0.035]',
+                  selected && selected !== row.domain ? 'opacity-30 hover:opacity-70' : 'opacity-100',
+                )}
+              >
                 <span className="truncate text-zinc-700">{row.domain}</span>
                 <span
                   className="flex h-3 gap-0.5 overflow-hidden rounded-full"
@@ -58,14 +75,14 @@ export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
   )
 }
 
-export function Daily({ days }: { days?: Stats['daily'] }) {
+export function Daily({ days, note = 'Last 14 days' }: { days?: Stats['daily']; note?: string }) {
   const still = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   return (
     <section aria-labelledby="daily">
       <h2 id="daily" className="font-display text-xl font-semibold tracking-tight text-ink">
         Reports per day
       </h2>
-      <p className="mt-0.5 pb-4 text-xs text-zinc-500">Last 14 days</p>
+      <p className="mt-0.5 pb-4 text-xs text-zinc-500">{note}</p>
       {!days ? (
         <Skeleton className="h-40" />
       ) : (

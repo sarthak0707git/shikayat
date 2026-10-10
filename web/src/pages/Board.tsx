@@ -10,7 +10,7 @@ import { Button, CountBadge, cx, EmptyState, PageHeader, SEVERITY_FILL, Severity
 import { api } from '../lib/api'
 import { formatDate, formatTime, place, plural, timeAgo } from '../lib/format'
 import { usePolling } from '../lib/usePolling'
-import { DOMAINS, type Complaint, type Severity, type Stats } from '../types'
+import { DOMAINS, type Complaint, type Severity } from '../types'
 
 const SEVERITIES: Severity[] = ['urgent', 'high', 'medium', 'low']
 const SPRING = { type: 'spring', duration: 0.6, bounce: 0.16 } as const
@@ -25,17 +25,20 @@ function byPriority(a: Complaint, b: Complaint) {
 }
 
 export default function Board() {
-  const [domain, setDomain] = useState('')
-  const { data, error, refresh } = usePolling(
+  // A link like /board?domain=Mess opens the board already filtered.
+  const [domain, setDomain] = useState(() => {
+    const asked = new URLSearchParams(window.location.search).get('domain') ?? ''
+    return (DOMAINS as readonly string[]).includes(asked) ? asked : ''
+  })
+  // Every complaint, loaded once and refreshed. The chips filter in the browser, so a switch is instant.
+  const all = usePolling(() => api.complaints(), 'all')
+  // Week totals and the daily chart need the stats endpoint. If the filtered call fails, use campus-wide and label it.
+  const statsPoll = usePolling(
     () =>
-      Promise.all([
-        api.complaints({ domain: domain || undefined }),
-        // If the filtered stats call fails, fall back to campus-wide numbers and say so.
-        api.stats(domain || undefined).then(
-          (stats) => ({ stats, scoped: true }),
-          (cause) => (domain ? api.stats().then((stats) => ({ stats, scoped: false })) : Promise.reject(cause)),
-        ),
-      ]),
+      api.stats(domain || undefined).then(
+        (stats) => ({ stats, domain, scoped: true }),
+        (cause) => (domain ? api.stats().then((stats) => ({ stats, domain, scoped: false })) : Promise.reject(cause)),
+      ),
     domain,
   )
   const [params, setParams] = useSearchParams()
@@ -44,7 +47,6 @@ export default function Board() {
   const [picked, setPicked] = useState<Complaint | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const seen = useRef(new Map<number, number>())
-  const seenView = useRef(domain)
   const flashTimer = useRef(0)
 
   function light(ids: number[]) {
@@ -53,32 +55,31 @@ export default function Board() {
     flashTimer.current = window.setTimeout(() => setFlash(new Set()), 2800)
   }
 
-  useEffect(() => {
-    if (error && data) toast.error(error, { id: 'board' })
-  }, [error, data])
+  const everything = all.data ?? undefined
+  const stats = statsPoll.data?.stats
+  // True while the week numbers on screen are not for the selected domain.
+  const campusOnly = Boolean(domain) && !(statsPoll.data?.domain === domain && statsPoll.data.scoped)
 
-  const complaints = data?.[0]
-  const stats = data?.[1].stats
-  const scoped = data?.[1].scoped ?? true
-
-  // A row lights up when its count rises, or when a brand-new complaint appears in the same view.
   useEffect(() => {
-    if (!complaints) return
+    if (all.error && everything) toast.error(all.error, { id: 'board' })
+  }, [all.error, everything])
+
+  // A row lights up when its count rises or a brand-new complaint appears.
+  useEffect(() => {
+    if (!everything) return
     const firstLoad = seen.current.size === 0
-    const sameView = seenView.current === domain
-    const changed = complaints
+    const changed = everything
       .filter((c) => {
         const before = seen.current.get(c.id)
-        return before === undefined ? !firstLoad && sameView : c.report_count > before
+        return before === undefined ? !firstLoad : c.report_count > before
       })
       .map((c) => c.id)
-    for (const c of complaints) seen.current.set(c.id, c.report_count)
-    seenView.current = domain
+    for (const c of everything) seen.current.set(c.id, c.report_count)
     if (changed.length) light(changed)
-  }, [complaints])
+  }, [everything])
 
   // Arriving from a report: scroll to that complaint and light it up, once.
-  const loaded = Boolean(complaints)
+  const loaded = Boolean(everything)
   useEffect(() => {
     if (!focusId || !loaded) return
     const row = document.getElementById(`c-${focusId}`)
@@ -89,13 +90,16 @@ export default function Board() {
     }
     setParams({}, { replace: true })
   }, [focusId, loaded])
+
+  const complaints = useMemo(() => everything?.filter((c) => !domain || c.domain === domain), [everything, domain])
   const active = useMemo(() => (complaints ?? []).filter((c) => c.status !== 'resolved').sort(byPriority), [complaints])
   const resolved = useMemo(() => (complaints ?? []).filter((c) => c.status === 'resolved').sort(byPriority), [complaints])
+  const pick = (name: string) => setDomain((current) => (current === name ? '' : name))
 
   return (
     <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
       <PageHeader title="What's broken, ranked." description="Every report from every student, merged into one list and sorted by how many people it is hurting.">
-        <p className="glass inline-flex h-9 items-center gap-2 rounded-full px-4 text-xs font-semibold tracking-wide text-ink">
+        <p className="inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-xs font-semibold tracking-wide text-ink ring-1 ring-zinc-900/10">
           <span className="live-dot text-green-600" aria-hidden="true" />
           Live, refreshes every 8 seconds
         </p>
@@ -111,8 +115,8 @@ export default function Board() {
               aria-pressed={on}
               onClick={() => setDomain(name)}
               className={cx(
-                'press relative h-11 shrink-0 rounded-full px-5 text-sm font-medium transition-colors duration-200 sm:h-10',
-                on ? 'text-white' : 'bg-white text-zinc-700 ring-1 ring-zinc-900/10 hover:text-ink',
+                'press relative h-11 shrink-0 rounded-full px-5 text-sm font-medium transition-colors duration-150 sm:h-10',
+                on ? 'text-white' : 'bg-white text-zinc-700 ring-1 ring-zinc-900/10 hover:bg-zinc-50 hover:text-ink',
               )}
             >
               {on && <motion.span layoutId="domain-pill" className="absolute inset-0 rounded-full bg-ink" transition={SPRING} />}
@@ -122,34 +126,36 @@ export default function Board() {
         })}
       </div>
 
-      {!data && error ? (
+      {!everything && all.error ? (
         <div className="tile p-6">
-          <EmptyState title="The board could not load" hint={error} />
+          <EmptyState title="The board could not load" hint={all.error} />
           <div className="flex justify-center">
-            <Button onClick={refresh}>Try again</Button>
+            <Button onClick={all.refresh}>Try again</Button>
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          <Kpis stats={stats} />
-          {domain && !scoped && (
-            <p className="px-1 text-xs text-zinc-500">
-              The four totals and the daily chart are campus-wide right now; everything else follows the {domain} filter.
-            </p>
-          )}
-          <ProblemMap complaints={complaints} selected={domain} onPick={(name) => setDomain(domain === name ? '' : name)} />
+          <Kpis
+            open={complaints?.filter((c) => c.status === 'open').length}
+            escalated={complaints?.filter((c) => c.escalated && c.status !== 'resolved').length}
+            reported={stats?.kpis.reported_7d}
+            resolved={stats?.kpis.resolved_7d}
+            campusOnly={campusOnly}
+          />
+          <ProblemMap complaints={everything} selected={domain} onPick={pick} />
           <div className="grid gap-3 lg:grid-cols-[3fr_2fr]">
-            <TopPriority items={complaints ? active.slice(0, 8) : undefined} />
+            <TopPriority key={domain} items={complaints ? active.slice(0, 8) : undefined} />
             <div className="flex flex-col gap-3">
               <div className="tile p-6">
-                <ByDomain rows={domain ? stats?.by_domain.filter((row) => row.domain === domain) : stats?.by_domain} />
+                <ByDomain rows={stats?.by_domain} selected={domain} onPick={pick} />
               </div>
               <div className="tile flex-1 p-6">
-                <Daily days={stats?.daily} />
+                <Daily days={stats?.daily} note={campusOnly ? 'Last 14 days, whole campus' : 'Last 14 days'} />
               </div>
             </div>
           </div>
           <Ranked
+            key={domain}
             active={complaints ? active : undefined}
             resolved={resolved}
             flash={flash}
@@ -162,25 +168,30 @@ export default function Board() {
       )}
 
       <Sheet open={sheetOpen} onClose={() => setSheetOpen(false)} label={picked ? `Complaint #${picked.id}` : 'Complaint'}>
-        {picked && <PublicDetail complaint={complaints?.find((c) => c.id === picked.id) ?? picked} />}
+        {picked && <PublicDetail complaint={everything?.find((c) => c.id === picked.id) ?? picked} />}
       </Sheet>
     </div>
   )
 }
 
-function Kpis({ stats }: { stats?: Stats }) {
-  const items: { label: string; value?: number; icon: LucideIcon; tone: string; sub: string }[] = [
-    { label: 'Open', value: stats?.kpis.open, icon: Inbox, tone: 'bg-ink text-white', sub: 'text-zinc-400' },
-    { label: 'Reported this week', value: stats?.kpis.reported_7d, icon: TrendingUp, tone: 'bg-white text-ink', sub: 'text-zinc-500' },
-    { label: 'Resolved this week', value: stats?.kpis.resolved_7d, icon: CircleCheck, tone: 'bg-white text-ink', sub: 'text-zinc-500' },
-    { label: 'Escalated', value: stats?.kpis.escalated, icon: Flame, tone: 'bg-indigo-600 text-white', sub: 'text-indigo-200' },
+type KpiProps = { open?: number; escalated?: number; reported?: number; resolved?: number; campusOnly: boolean }
+
+function Kpis({ open, escalated, reported, resolved, campusOnly }: KpiProps) {
+  const items: { label: string; value?: number; icon: LucideIcon; tone: string; sub: string; campus?: boolean }[] = [
+    { label: 'Open', value: open, icon: Inbox, tone: 'bg-ink text-white', sub: 'text-zinc-400' },
+    { label: 'Reported this week', value: reported, icon: TrendingUp, tone: 'bg-white text-ink', sub: 'text-zinc-500', campus: campusOnly },
+    { label: 'Resolved this week', value: resolved, icon: CircleCheck, tone: 'bg-white text-ink', sub: 'text-zinc-500', campus: campusOnly },
+    { label: 'Escalated', value: escalated, icon: Flame, tone: 'bg-indigo-600 text-white', sub: 'text-indigo-200' },
   ]
   return (
     <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {items.map((item) => (
         <div key={item.label} className={cx('tile flex min-h-36 flex-col justify-between p-5 sm:min-h-44 sm:p-6', item.tone)}>
           <dt className={cx('flex items-center justify-between gap-2 text-sm font-medium', item.sub)}>
-            {item.label}
+            <span>
+              {item.label}
+              {item.campus && <span className="mt-1 block w-fit rounded-full bg-zinc-900/[0.06] px-2 py-0.5 text-[11px] whitespace-nowrap text-zinc-600">whole campus</span>}
+            </span>
             <item.icon className="size-5 shrink-0" aria-hidden="true" />
           </dt>
           <dd className="font-display text-6xl leading-none font-extrabold tracking-tight sm:text-7xl">
@@ -221,7 +232,7 @@ function TopPriority({ items }: { items?: Complaint[] }) {
       ) : items.length === 0 ? (
         <EmptyState title="Nothing open here" hint="No open issues in this domain right now." />
       ) : (
-        <ol className="flex flex-col gap-4">
+        <ol className="rise flex flex-col gap-4">
           {items.map((c, index) => (
             <motion.li key={c.id} layout="position" transition={SPRING}>
               <div className="flex items-baseline justify-between gap-4">
@@ -280,7 +291,7 @@ function Ranked({ active, resolved, flash, onOpen }: RankedProps) {
       ) : active.length + resolved.length === 0 ? (
         <EmptyState title="No complaints yet" hint="Reports from students show up here as soon as they are filed." />
       ) : (
-        <ol className="divide-y divide-zinc-900/[0.07]">
+        <ol className="rise divide-y divide-zinc-900/[0.07]">
           {active.map((c, index) => (
             <Row key={c.id} complaint={c} rank={index + 1} lit={flash.has(c.id)} onOpen={onOpen} />
           ))}
@@ -302,7 +313,7 @@ function Row({ complaint: c, rank, lit, onOpen }: RowProps) {
       <button
         type="button"
         onClick={() => onOpen(c)}
-        className="relative flex w-full flex-col gap-2 rounded-2xl py-4 text-left sm:flex-row sm:items-center sm:gap-4"
+        className="relative -mx-3 flex w-[calc(100%+1.5rem)] flex-col gap-2 rounded-2xl px-3 py-4 text-left transition-colors duration-150 hover:bg-zinc-900/[0.035] sm:flex-row sm:items-center sm:gap-4"
       >
       <div className="flex min-w-0 flex-1 items-start gap-4">
         <span
