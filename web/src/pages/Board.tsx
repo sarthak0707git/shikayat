@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { toast } from 'sonner'
 import { ByDomain, Daily } from '../components/BoardCharts'
+import { ProblemMap } from '../components/ProblemMap'
 import { Button, CountBadge, cx, EmptyState, PageHeader, SEVERITY_FILL, SeverityTag, Skeleton, StatusPill, Ticker } from '../components/ui'
 import { api } from '../lib/api'
 import { place, plural, timeAgo } from '../lib/format'
@@ -77,6 +78,7 @@ export default function Board() {
       ) : (
         <div className="flex flex-col gap-3">
           <Kpis stats={stats} />
+          <ProblemMap complaints={complaints} />
           <div className="grid gap-3 lg:grid-cols-[3fr_2fr]">
             <TopPriority items={complaints ? active.slice(0, 8) : undefined} />
             <div className="flex flex-col gap-3">

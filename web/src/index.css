@@ -144,3 +144,44 @@ body {
     transition: none;
   }
 }
+
+/* The ink composer on the Report page. */
+.ink-card {
+  box-shadow:
+    0 0 0 1px rgb(13 12 20 / 0.9),
+    0 40px 80px -40px rgb(13 12 20 / 0.65);
+}
+
+/* Live strip on the Report page: two copies of the list, slid by half. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 48s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Cells of the problem map on the board. */
+.cell {
+  transition:
+    opacity 420ms var(--ease-out-strong),
+    transform 420ms var(--ease-out-strong);
+  transition-delay: calc(var(--i, 0) * 35ms);
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+  .cell {
+    transition: none;
+  }
+}

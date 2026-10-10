@@ -4,12 +4,11 @@ import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type R
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { ThinkingOrb } from 'thinking-orbs'
-import { GrainGradient } from '../components/GrainGradient'
-import { Button, SeverityTag, StatusPill, Ticker } from '../components/ui'
+import { cx, SeverityTag, StatusPill, Ticker } from '../components/ui'
 import { api } from '../lib/api'
 import { place } from '../lib/format'
 import { usePolling } from '../lib/usePolling'
-import type { ReportResult } from '../types'
+import type { Complaint, ReportResult } from '../types'
 
 const EXAMPLES = ['dal mein keeda tha aaj lunch mein', 'AC se paani tapak raha hai', 'the moon is too bright']
 
@@ -48,15 +47,6 @@ export default function Report() {
   const [busy, setBusy] = useState<Busy>(null)
   const [threadId, setThreadId] = useState<string | null>(null)
   const [answer, setAnswer] = useState('')
-
-  // Wide: the dark field sits behind the composer on the right. Narrow: it drops below the text.
-  const [wide, setWide] = useState(() => window.matchMedia('(min-width: 1024px)').matches)
-  useEffect(() => {
-    const query = window.matchMedia('(min-width: 1024px)')
-    const onChange = () => setWide(query.matches)
-    query.addEventListener('change', onChange)
-    return () => query.removeEventListener('change', onChange)
-  }, [])
 
   const textRef = useRef<HTMLTextAreaElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
@@ -168,103 +158,82 @@ export default function Report() {
     if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) void submit()
   }
 
+
+  let orb: 'breathing' | 'searching' | 'composing' | 'listening' = 'breathing'
+  let status = 'Ready when you are'
+  if (busy === 'waiting') [orb, status] = ['searching', 'Reading it and checking for duplicates']
+  else if (busy === 'revealing') [orb, status] = ['composing', 'Writing it up']
+  else if (asking) [orb, status] = ['listening', 'Waiting for your answer']
+  else if (finished) status = 'Done. Next one?'
+
   return (
-    <div className="px-3 pt-3 pb-3">
-      <section className="relative isolate overflow-hidden rounded-[2rem] lg:min-h-[calc(100dvh-6.5rem)]">
-        <GrainGradient
-          className="!absolute inset-0 -z-10"
-          colorLight="#f4f2ec"
-          colorMid="#a5b4fc"
-          colorDark="#1e1b4b"
-          angle={wide ? 0 : 90}
-          position={wide ? 0.26 : 0.44}
-          curve={wide ? 0.62 : 0.3}
-          softness={0.2}
-          grain={0.26}
-          speed={0.8}
-        />
+    <div className="flex flex-col lg:min-h-[calc(100dvh-4.25rem)]">
+      <div className="mx-auto grid w-full max-w-6xl flex-1 gap-10 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-16">
+        <Pitch />
 
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-10 sm:px-8 sm:py-14 lg:min-h-[calc(100dvh-6.5rem)] lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-14">
-          <Pitch busy={busy} asking={asking} finished={finished} />
+        <div className="min-w-0">
+          {/* The composer is the one ink surface on the page: Gemma's desk. */}
+          <div className="ink-card rounded-[2rem] bg-ink p-2 text-white">
+            <div className="flex items-center gap-3 px-3 pt-2 pb-1">
+              <ThinkingOrb state={orb} size={64} theme="dark" paused={finished} aria-hidden="true" style={{ width: 48, height: 48 }} />
+              <p role="status" className="min-w-0">
+                <span className="block font-display text-lg leading-tight font-semibold tracking-tight">Gemma 4</span>
+                <span className="block truncate text-sm text-zinc-400">{status}</span>
+              </p>
+            </div>
 
-          <div className="min-w-0">
             {!started ? (
               <form onSubmit={submit}>
-                <div className="glass rounded-[1.75rem] p-2 transition-shadow duration-200 focus-within:ring-4 focus-within:ring-white/50">
-                  <label htmlFor="problem" className="block px-4 pt-3 font-display text-lg font-semibold tracking-tight text-ink">
-                    Kya problem hai?
-                  </label>
-                  <textarea
-                    id="problem"
-                    ref={textRef}
-                    value={text}
-                    onChange={(event) => setText(event.target.value)}
-                    onKeyDown={onKeyDown}
-                    rows={4}
-                    autoFocus
-                    placeholder="English ya Hinglish, dono chalega"
-                    className="block min-h-36 w-full resize-none bg-transparent px-4 pt-2 pb-3 text-lg leading-relaxed text-ink outline-none placeholder:text-zinc-400"
+                <label htmlFor="problem" className="sr-only">
+                  Kya problem hai?
+                </label>
+                <textarea
+                  id="problem"
+                  ref={textRef}
+                  value={text}
+                  onChange={(event) => setText(event.target.value)}
+                  onKeyDown={onKeyDown}
+                  rows={4}
+                  autoFocus
+                  placeholder="Kya problem hai? English ya Hinglish, dono chalega"
+                  className="block min-h-40 w-full resize-none bg-transparent px-4 pt-4 pb-3 text-xl leading-relaxed text-white outline-none placeholder:text-zinc-500"
+                />
+                <div className="flex items-center justify-between gap-3 p-1">
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    className="sr-only"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    onChange={(event) => void attach(event.target.files?.[0])}
                   />
-                  <div className="flex items-center justify-between gap-3 p-1">
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      className="sr-only"
-                      tabIndex={-1}
-                      aria-hidden="true"
-                      onChange={(event) => void attach(event.target.files?.[0])}
-                    />
-                    {photo ? (
-                      <div className="flex min-w-0 items-center gap-1 pl-1">
-                        <img src={photo.url} alt="Attached photo" className="size-11 rounded-2xl object-cover ring-1 ring-zinc-900/10" />
-                        <Button variant="ghost" size="lg" onClick={removePhoto}>
-                          Remove
-                        </Button>
-                      </div>
-                    ) : (
-                      <Button variant="ghost" size="lg" onClick={() => fileRef.current?.click()}>
-                        <ImagePlus className="size-4" aria-hidden="true" />
-                        Add photo
-                      </Button>
-                    )}
-                    <Button type="submit" variant="primary" size="lg" disabled={!text.trim()} className="pr-2 pl-5">
-                      Send
-                      <span className="flex size-7 items-center justify-center rounded-full bg-white/15">
-                        <ArrowUp className="size-4" aria-hidden="true" />
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {EXAMPLES.map((example) => (
-                    <button
-                      key={example}
-                      type="button"
-                      onClick={() => {
-                        setText(example)
-                        textRef.current?.focus()
-                      }}
-                      className="glass press h-11 rounded-full px-4 text-left text-sm font-medium text-zinc-800 sm:h-10"
-                    >
-                      {example}
+                  {photo ? (
+                    <div className="flex min-w-0 items-center gap-1 pl-1">
+                      <img src={photo.url} alt="Attached photo" className="size-11 rounded-2xl object-cover ring-1 ring-white/20" />
+                      <button type="button" onClick={removePhoto} className={DARK_GHOST}>
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <button type="button" onClick={() => fileRef.current?.click()} className={DARK_GHOST}>
+                      <ImagePlus className="size-4" aria-hidden="true" />
+                      Add photo
                     </button>
-                  ))}
+                  )}
+                  <button type="submit" disabled={!text.trim()} className={cx(ACCENT, 'pr-2 pl-5')}>
+                    Send
+                    <span className="flex size-7 items-center justify-center rounded-full bg-white/20">
+                      <ArrowUp className="size-4" aria-hidden="true" />
+                    </span>
+                  </button>
                 </div>
               </form>
             ) : (
-              <div className="glass rise flex flex-col gap-4 rounded-[1.75rem] p-4 sm:p-6" aria-live="polite">
+              <div className="flex flex-col gap-4 p-3 pt-4" aria-live="polite">
                 {turns.map((turn, index) => (
                   <TurnView key={index} turn={turn} />
                 ))}
-
-                {busy === 'waiting' && (
-                  <div role="status" className="rise flex items-center gap-2.5 text-sm font-medium text-zinc-700">
-                    <ThinkingOrb state="searching" size={20} theme="light" aria-hidden="true" />
-                    <span>Gemma is reading your report</span>
-                  </div>
-                )}
 
                 {asking && (
                   <form onSubmit={reply} className="rise flex gap-2">
@@ -278,29 +247,24 @@ export default function Report() {
                       autoFocus
                       autoComplete="off"
                       placeholder="Type your answer"
-                      className="h-12 min-w-0 flex-1 rounded-full bg-white px-5 text-base text-ink ring-1 ring-zinc-900/10 outline-none transition-shadow duration-150 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-600"
+                      className="h-12 min-w-0 flex-1 rounded-full bg-white/10 px-5 text-base text-white outline-none transition-shadow duration-150 placeholder:text-zinc-500 focus:ring-2 focus:ring-indigo-400"
                     />
-                    <Button type="submit" variant="primary" size="lg" className="h-12" disabled={!answer.trim()}>
+                    <button type="submit" disabled={!answer.trim()} className={cx(ACCENT, 'h-12 px-6')}>
                       Reply
-                    </Button>
+                    </button>
                   </form>
                 )}
 
                 {finished && (
                   <div className="rise flex flex-wrap gap-2">
-                    {last.result.status === 'error' ? (
-                      <Button variant="primary" size="lg" onClick={() => reset(true)}>
-                        Try again
-                      </Button>
-                    ) : (
-                      <Button variant="primary" size="lg" onClick={() => reset()}>
-                        Report another
-                      </Button>
-                    )}
-                    <Link
-                      to="/board"
-                      className="press inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-medium text-ink transition-colors duration-150 hover:bg-zinc-900/5"
+                    <button
+                      type="button"
+                      onClick={() => reset(last.result.status === 'error')}
+                      className="press inline-flex h-11 items-center rounded-full bg-white px-5 text-sm font-medium text-ink transition-colors duration-150 hover:bg-zinc-200"
                     >
+                      {last.result.status === 'error' ? 'Try again' : 'Report another'}
+                    </button>
+                    <Link to="/board" className={DARK_GHOST}>
                       See it on the board
                       <ArrowRight className="size-4" aria-hidden="true" />
                     </Link>
@@ -310,16 +274,42 @@ export default function Report() {
               </div>
             )}
           </div>
+
+          {!started && (
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+              <span className="pr-1 text-sm text-zinc-500">Try</span>
+              {EXAMPLES.map((example) => (
+                <button
+                  key={example}
+                  type="button"
+                  onClick={() => {
+                    setText(example)
+                    textRef.current?.focus()
+                  }}
+                  className="press h-11 rounded-full bg-white px-4 text-left text-sm font-medium text-zinc-800 ring-1 ring-zinc-900/10 transition-colors duration-150 hover:text-ink sm:h-10"
+                >
+                  {example}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-      </section>
+      </div>
+
+      <LiveStrip />
     </div>
   )
 }
 
+const DARK_GHOST =
+  'press inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-zinc-300 transition-colors duration-150 hover:bg-white/10 hover:text-white'
+const ACCENT =
+  'press inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-indigo-500 text-sm font-semibold text-white transition-colors duration-150 hover:bg-indigo-400 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-zinc-500'
+
 /** Words rise out of a blur, one after another. */
-function Reveal({ text, delay = 0, className }: { text: string; delay?: number; className?: string }) {
+function Reveal({ text, delay = 0 }: { text: string; delay?: number }) {
   return (
-    <span className={className}>
+    <>
       {text.split(' ').map((word, index) => (
         <motion.span
           key={index}
@@ -331,58 +321,49 @@ function Reveal({ text, delay = 0, className }: { text: string; delay?: number; 
           {word}{' '}
         </motion.span>
       ))}
-    </span>
+    </>
   )
 }
 
-function Pitch({ busy, asking, finished }: { busy: Busy; asking: boolean; finished: boolean }) {
+function Pitch() {
   const stats = usePolling(() => api.stats(), 'pitch', 15000).data
-
-  let orb: 'breathing' | 'searching' | 'composing' | 'listening' = 'breathing'
-  let status = 'Ready when you are'
-  if (busy === 'waiting') [orb, status] = ['searching', 'Reading it and checking for duplicates']
-  else if (busy === 'revealing') [orb, status] = ['composing', 'Writing it up']
-  else if (asking) [orb, status] = ['listening', 'Waiting for your answer']
-  else if (finished) status = 'Done. Next one?'
-
   return (
     <div className="min-w-0">
-      <p className="glass inline-flex h-9 items-center gap-2 rounded-full px-4 text-xs font-semibold tracking-wide text-ink">
+      <p className="inline-flex h-9 items-center gap-2 rounded-full bg-white px-4 text-xs font-semibold tracking-wide text-ink ring-1 ring-zinc-900/10">
         <span className="live-dot text-indigo-600" aria-hidden="true" />
         Campus complaints, triaged by Gemma 4
       </p>
 
-      <h1 className="mt-6 font-display text-[clamp(3.25rem,9vw,6.5rem)] leading-[0.92] font-extrabold tracking-[-0.04em] text-ink">
-        <Reveal text="Shikayat hai?" className="block" />
-        <Reveal text="Bol do." delay={0.22} className="block text-indigo-700" />
+      <h1 className="mt-6 font-display text-[clamp(3.25rem,9.5vw,7rem)] leading-[0.9] font-extrabold tracking-[-0.045em] text-ink">
+        <span className="block">
+          <Reveal text="Shikayat hai?" />
+        </span>
+        <motion.span
+          className="mt-3 inline-block rounded-[0.22em] bg-indigo-600 px-[0.16em] pb-[0.08em] text-white"
+          initial={{ opacity: 0, transform: 'rotate(-8deg) scale(0.92)' }}
+          animate={{ opacity: 1, transform: 'rotate(-2.5deg) scale(1)' }}
+          transition={{ type: 'spring', duration: 0.7, bounce: 0.35, delay: 0.3 }}
+        >
+          Bol do.
+        </motion.span>
       </h1>
 
-      <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-zinc-800">
+      <p className="mt-8 max-w-[44ch] text-lg leading-relaxed text-zinc-700">
         No forms. Type it like a WhatsApp rant in English, Hinglish or Hindi, add a photo if you have one. Gemma files it,
         merges duplicates and asks back only when a detail is missing.
       </p>
 
-      <div className="mt-8 flex items-center gap-4">
-        <span className="glass flex size-[4.5rem] shrink-0 items-center justify-center rounded-full">
-          <ThinkingOrb state={orb} size={64} theme="light" paused={finished} aria-hidden="true" style={{ width: 56, height: 56 }} />
-        </span>
-        <p role="status" className="min-w-0">
-          <span className="block font-display text-lg font-semibold tracking-tight text-ink">Gemma 4</span>
-          <span className="block text-sm text-zinc-700">{status}</span>
-        </p>
-      </div>
-
-      <dl className="mt-8 flex flex-wrap gap-x-8 gap-y-4">
+      <dl className="mt-8 flex flex-wrap divide-x divide-zinc-900/10">
         {[
           { label: 'open issues', value: stats?.kpis.open },
           { label: 'reports this week', value: stats?.kpis.reported_7d },
           { label: 'escalated', value: stats?.kpis.escalated },
         ].map((item) => (
-          <div key={item.label}>
-            <dd className="font-display text-4xl leading-none font-bold tracking-tight text-ink">
-              {item.value === undefined ? <span className="text-zinc-400">--</span> : <Ticker value={item.value} />}
+          <div key={item.label} className="px-6 first:pl-0">
+            <dd className="font-display text-5xl leading-none font-extrabold tracking-tight text-ink">
+              {item.value === undefined ? <span className="text-zinc-300">--</span> : <Ticker value={item.value} />}
             </dd>
-            <dt className="mt-1 text-sm text-zinc-700">{item.label}</dt>
+            <dt className="mt-1.5 text-sm text-zinc-600">{item.label}</dt>
           </div>
         ))}
       </dl>
@@ -390,22 +371,51 @@ function Pitch({ busy, asking, finished }: { busy: Busy; asking: boolean; finish
   )
 }
 
+/** What the campus is reporting right now, drifting past. Pauses on hover; still under reduced motion. */
+function LiveStrip() {
+  const top = usePolling(
+    () => api.complaints().then((all) => all.filter((c) => c.status !== 'resolved').sort((a, b) => b.priority - a.priority).slice(0, 10)),
+    'strip',
+    15000,
+  ).data
+  if (!top?.length) return <div className="h-16" />
+  const run = (hidden: boolean) => (
+    <ul className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {top.map((c: Complaint) => (
+        <li key={c.id} className="flex items-center gap-3 pr-10 font-display text-xl font-semibold tracking-tight whitespace-nowrap text-ink">
+          <span className="size-2 rounded-full bg-indigo-600" aria-hidden="true" />
+          {c.summary}
+          <span className="font-sans text-sm font-medium text-zinc-500 tabular-nums">{c.report_count} reports</span>
+        </li>
+      ))}
+    </ul>
+  )
+  return (
+    <section aria-label="Top issues right now" className="marquee overflow-hidden border-y border-zinc-900/10 bg-white py-4">
+      <div className="marquee-track flex w-max">
+        {run(false)}
+        {run(true)}
+      </div>
+    </section>
+  )
+}
+
 function TurnView({ turn }: { turn: Turn }) {
   if (turn.kind === 'student') {
     return (
       <div className="rise ml-auto flex max-w-[85%] flex-col items-end gap-2">
-        {turn.photo && <img src={turn.photo} alt="Photo you attached" className="max-h-48 rounded-2xl object-cover ring-1 ring-zinc-900/10" />}
-        <p className="rounded-3xl rounded-br-lg bg-ink px-5 py-3 text-base leading-relaxed break-words text-white">{turn.text}</p>
+        {turn.photo && <img src={turn.photo} alt="Photo you attached" className="max-h-48 rounded-2xl object-cover ring-1 ring-white/20" />}
+        <p className="rounded-3xl rounded-br-lg bg-white/10 px-5 py-3 text-base leading-relaxed break-words text-white">{turn.text}</p>
       </div>
     )
   }
 
   if (turn.kind === 'steps') {
     return (
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-2 px-1">
         {turn.labels.map((label, index) => (
-          <li key={index} className="rise flex items-start gap-2.5 text-sm text-zinc-700">
-            <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-indigo-600 text-white">
+          <li key={index} className="rise flex items-start gap-2.5 text-sm text-zinc-300">
+            <span className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full bg-indigo-500 text-white">
               <Check className="size-3" strokeWidth={3} aria-hidden="true" />
             </span>
             {label}
@@ -444,7 +454,7 @@ function ResultCard({ result }: { result: ReportResult }) {
   }
 
   return (
-    <section className="rise overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/10">
+    <section className="rise overflow-hidden rounded-3xl bg-white text-ink">
       <div className="flex items-start gap-3 p-5">
         <span className="mt-0.5 shrink-0">{icon}</span>
         <div className="min-w-0">
