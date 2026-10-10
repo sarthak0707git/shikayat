@@ -100,9 +100,30 @@ Priority and escalation are computed in code, never by you:
 - `summary`: English, neutral, ≤ 12 words, no personal names — it is shown publicly.
 - Never surface the raw message, photo or anyone's name on the public board.
 
+## 6. Worked examples (more in [references/examples.md](references/examples.md))
+
+**Hinglish duplicate → merged.** "aaj lunch mein dal mein keeda tha" + photo.
+Mess / Hygiene, meal `lunch` (inferred from "aaj lunch mein"), severity `urgent`
+(insects in food; the photo confirms). `find_similar` already shows "Insects found
+in food at lunch" — same category, same mess, same meal → `merge_into`. The count
+goes up; no question is asked because nothing was missing.
+
+**Vague location → one question.** "AC se paani tapak raha hai". Hostel /
+Electrical & AC, but `building` and `spot` are missing, so ask once, in Hinglish,
+for **both**: *"Kaunsa hostel aur room number?"* The answer "BH2 (Gopad), E207"
+completes the triage: severity `high`, summary "Water leaking from AC in room E207",
+`file_new`. That was 1 of the 2 allowed questions.
+
+**Nonsense → reject.** "the moon is too bright tonight". Not a campus facility
+problem → `reject` with one polite sentence ("Sorry, this isn't a campus facility
+problem — report a hostel, mess, IT, academic or campus issue and we'll route it").
+No bucket, nothing public.
+
 ## Files
 
 - [references/buckets.md](references/buckets.md) — full bucket table, buildings,
   spot/meal/severity examples, summary rules.
+- [references/examples.md](references/examples.md) — 10 worked examples:
+  input → category, severity, summary, decision.
 - [scripts/triage_check.py](scripts/triage_check.py) — the validator above,
   stdlib only, no dependencies.
