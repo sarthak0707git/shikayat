@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
-/* Design tokens. Brief section 7: light, zinc, one accent (indigo-600), Inter. */
+/* Design tokens: warm paper, ink type, one indigo accent, a loud display face. */
 @theme {
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-paper: #f4f2ec;
+  --color-ink: #0d0c14;
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
-  --radius-card: 12px;
-  --radius-control: 10px;
 }
 
 html {
@@ -15,15 +16,35 @@ html {
 }
 
 body {
-  @apply bg-white font-sans text-zinc-900 antialiased;
-  font-feature-settings: "cv11", "ss01";
+  @apply bg-paper font-sans text-zinc-900 antialiased;
 }
 
 :focus-visible {
   @apply outline-2 outline-offset-2 outline-indigo-600;
 }
 
-/* Anything pressable: instant feedback, nothing else animates. */
+/* Surfaces. Glass floats over the gradient; tiles sit on the paper. */
+/* In the components layer so a utility like bg-ink can override a tile. */
+@layer components {
+  .glass {
+    background: rgb(255 255 255 / 0.84);
+    backdrop-filter: blur(28px) saturate(1.5);
+    -webkit-backdrop-filter: blur(28px) saturate(1.5);
+    border: 1px solid rgb(255 255 255 / 0.7);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 0 0 1px rgb(13 12 20 / 0.05),
+      0 40px 80px -36px rgb(30 27 75 / 0.55);
+  }
+  .tile {
+    @apply rounded-3xl bg-white;
+    box-shadow:
+      0 0 0 1px rgb(13 12 20 / 0.06),
+      0 28px 56px -36px rgb(30 27 75 / 0.3);
+  }
+}
+
+/* Anything pressable: instant feedback. */
 .press {
   transition: transform 160ms var(--ease-out-strong);
 }
@@ -36,11 +57,11 @@ body {
   opacity: 1;
   transform: translateY(0);
   transition:
-    opacity 220ms var(--ease-out-strong),
-    transform 220ms var(--ease-out-strong);
+    opacity 260ms var(--ease-out-strong),
+    transform 260ms var(--ease-out-strong);
   @starting-style {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(10px);
   }
 }
 
@@ -63,15 +84,43 @@ body {
 /* Bars on the board: a full-width fill slid into place, so only transform animates. */
 .bar {
   transform: translateX(var(--offset, -100%));
-  transition: transform 280ms var(--ease-out-strong);
-  transition-delay: calc(var(--i, 0) * 40ms);
+  transition: transform 520ms var(--ease-out-strong);
+  transition-delay: calc(var(--i, 0) * 50ms);
   @starting-style {
     transform: translateX(-100%);
   }
 }
 
+/* "Live" marker on the board: the one decorative loop outside the hero. */
+@keyframes ping-soft {
+  from {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: currentColor;
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  animation: ping-soft 1.8s var(--ease-out-strong) infinite;
+}
+
 .skeleton {
-  @apply rounded-md bg-zinc-100;
+  @apply rounded-xl bg-zinc-900/[0.06];
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -86,7 +135,8 @@ body {
       transform: none;
     }
   }
-  .bump {
+  .bump,
+  .live-dot::after {
     animation: none;
   }
   .bar,

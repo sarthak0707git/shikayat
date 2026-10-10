@@ -11,9 +11,9 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 const BUTTON = {
-  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 disabled:bg-zinc-200 disabled:text-zinc-500',
-  secondary: 'border border-zinc-200 bg-white text-zinc-900 hover:bg-zinc-50 disabled:text-zinc-400',
-  ghost: 'text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900 disabled:text-zinc-400',
+  primary: 'bg-ink text-white hover:bg-zinc-800 disabled:bg-zinc-900/10 disabled:text-zinc-500',
+  secondary: 'bg-white text-zinc-900 ring-1 ring-zinc-900/10 hover:bg-zinc-50 disabled:text-zinc-400',
+  ghost: 'text-zinc-700 hover:bg-zinc-900/5 hover:text-zinc-900 disabled:text-zinc-400',
 }
 
 export function Button({ variant = 'secondary', size = 'md', className, type = 'button', ...rest }: ButtonProps) {
@@ -21,9 +21,9 @@ export function Button({ variant = 'secondary', size = 'md', className, type = '
     <button
       type={type}
       className={cx(
-        'press inline-flex shrink-0 items-center justify-center gap-2 rounded-[10px] text-sm font-medium',
+        'press inline-flex shrink-0 items-center justify-center gap-2 rounded-full text-sm font-medium',
         'transition-colors duration-150 disabled:cursor-not-allowed',
-        size === 'lg' ? 'h-11 px-4' : 'h-9 px-3',
+        size === 'lg' ? 'h-11 px-5' : 'h-9 px-4',
         BUTTON[variant],
         className,
       )}
@@ -108,14 +108,39 @@ export function Skeleton({ className }: { className?: string }) {
 
 export function PageHeader({ title, description, children }: { title: string; description: string; children?: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 pb-6">
+    <div className="flex flex-wrap items-end justify-between gap-6 pt-6 pb-8 sm:pt-10">
       <div className="min-w-0">
-        <h1 className="text-xl font-semibold tracking-tight text-zinc-900">{title}</h1>
-        <p className="mt-1 text-sm text-zinc-600">{description}</p>
+        <h1 className="font-display text-4xl leading-[1.02] font-bold tracking-tight text-balance text-ink sm:text-6xl">{title}</h1>
+        <p className="mt-3 max-w-[58ch] text-base text-zinc-600">{description}</p>
       </div>
       {children}
     </div>
   )
+}
+
+/** Counts to its value: from zero on first paint, from the old number after that. */
+export function Ticker({ value, className }: { value: number; className?: string }) {
+  const [shown, setShown] = useState(0)
+  const current = useRef(0)
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      current.current = value
+      setShown(value)
+      return
+    }
+    const from = current.current
+    const start = performance.now()
+    let frame = 0
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / 800)
+      current.current = Math.round(from + (value - from) * (1 - Math.pow(1 - t, 4)))
+      setShown(current.current)
+      if (t < 1) frame = requestAnimationFrame(step)
+    }
+    frame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame)
+  }, [value])
+  return <span className={cx('tabular-nums', className)}>{shown}</span>
 }
 
 export function EmptyState({ title, hint }: { title: string; hint?: string }) {
