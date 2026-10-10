@@ -161,7 +161,7 @@ export default function Report() {
 
   let orb: 'breathing' | 'searching' | 'composing' | 'listening' = 'breathing'
   let status = 'Ready when you are'
-  if (busy === 'waiting') [orb, status] = ['searching', 'Reading it and checking for duplicates']
+  if (busy === 'waiting') [orb, status] = ['searching', 'Working on it']
   else if (busy === 'revealing') [orb, status] = ['composing', 'Writing it up']
   else if (asking) [orb, status] = ['listening', 'Waiting for your answer']
   else if (finished) status = 'Done. Next one?'
@@ -308,27 +308,23 @@ const DARK_GHOST =
 const ACCENT =
   'press inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-indigo-500 text-sm font-semibold text-white transition-colors duration-150 hover:bg-indigo-400 disabled:cursor-not-allowed disabled:bg-white/10 disabled:text-zinc-500'
 
-type Thought = { say: string; gloss: string; orb: 'searching' | 'weaving' | 'connecting' | 'solving' | 'composing' | 'shaping' }
-
-// What Gemma is up to while we wait, in the app's own voice. It walks forward, then circles the middle.
-const THOUGHTS: Thought[] = [
-  { say: 'Padhai chalu hai', gloss: 'Reading what you wrote', orb: 'searching' },
-  { say: 'Sahi dabba dhoondha ja raha hai', gloss: 'Finding the right bucket', orb: 'weaving' },
-  { say: 'Purani shikayatein khangali ja rahi hain', gloss: 'Digging through open complaints', orb: 'searching' },
-  { say: 'Duplicate ki talaash jaari hai', gloss: 'Hunting for a duplicate', orb: 'connecting' },
-  { say: 'Tol-mol chalu: kitna serious hai?', gloss: 'Weighing how serious it is', orb: 'solving' },
-  { say: 'Bas, likha ja raha hai', gloss: 'Nearly there, writing it up', orb: 'composing' },
+// One quiet line while we wait. Each stays up long enough to read.
+const THOUGHTS = [
+  'Padh rahe hain',
+  'Sahi dabba dhoondh rahe hain',
+  'Purani shikayatein khangal rahe hain',
+  'Duplicate dhoondh rahe hain',
+  'Bas, likh rahe hain',
 ]
-const PHOTO_THOUGHT: Thought = { say: 'Photo ko ghoora ja raha hai', gloss: 'Staring hard at your photo', orb: 'shaping' }
 
 /** Shown while the request is in flight, so a slow answer never looks like a frozen page. */
 function Thinking({ hasPhoto }: { hasPhoto: boolean }) {
-  const thoughts = hasPhoto ? [THOUGHTS[0], PHOTO_THOUGHT, ...THOUGHTS.slice(1)] : THOUGHTS
+  const thoughts = hasPhoto ? [THOUGHTS[0], 'Photo dekh rahe hain', ...THOUGHTS.slice(1)] : THOUGHTS
   const [step, setStep] = useState(0)
   const [seconds, setSeconds] = useState(0)
 
   useEffect(() => {
-    const talk = setInterval(() => setStep((n) => (n + 1 < thoughts.length ? n + 1 : 2)), 1900)
+    const talk = setInterval(() => setStep((n) => (n + 1 < thoughts.length ? n + 1 : n)), 3500)
     const clock = setInterval(() => setSeconds((n) => n + 1), 1000)
     return () => {
       clearInterval(talk)
@@ -336,17 +332,13 @@ function Thinking({ hasPhoto }: { hasPhoto: boolean }) {
     }
   }, [thoughts.length])
 
-  const thought = thoughts[step]
   return (
-    <div className="rise flex items-center gap-4 rounded-3xl bg-white/[0.06] p-4">
-      <ThinkingOrb state={thought.orb} size={64} theme="dark" aria-hidden="true" />
-      <div className="min-w-0 flex-1" aria-hidden="true">
-        <p key={step} className="rise font-display text-xl leading-snug font-semibold tracking-tight text-white">
-          {thought.say}
-        </p>
-        <p className="mt-0.5 text-sm text-zinc-400">{thought.gloss}</p>
-      </div>
-      <span className="self-start font-display text-sm font-semibold text-zinc-500 tabular-nums" aria-hidden="true">
+    <div className="rise flex items-center gap-2.5 px-1 text-sm text-zinc-300">
+      <ThinkingOrb state="searching" size={20} theme="dark" aria-hidden="true" />
+      <span key={step} className="rise" aria-hidden="true">
+        {thoughts[step]}
+      </span>
+      <span className="text-zinc-500 tabular-nums" aria-hidden="true">
         {seconds}s
       </span>
       <span role="status" className="sr-only">
