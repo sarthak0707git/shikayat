@@ -8,7 +8,6 @@ A public board ranks issues by how many students are hitting them; each authorit
 > Complaint portals already exist. They make you fill forms and bury wardens in duplicates.
 > Ours takes a Hinglish rant or a photo, works out whether it's already been reported, and asks back when it's unsure.
 
-<!-- P5: replace with docs/screenshot.png once the UI is up -->
 ![screenshot](docs/screenshot.png)
 
 ## The model
@@ -92,7 +91,15 @@ photos: uploads/<uuid>.jpg, served at /uploads/...
 
 ## Team
 
-*(P5: names here, and in LICENSE)*
+Built at OpenLake x MLH Hack Day, IIT Bhilai, on 10 October 2026.
+
+| Who | GitHub | What they built |
+|---|---|---|
+| Sarthak Shrivastava | [@sarthak0707git](https://github.com/sarthak0707git) | Harness upgrades, the Gemma triage agent and prompt, FastAPI + SQLite, seed data, submission gate |
+| Vedant | [@xtacy-on-code](https://github.com/xtacy-on-code) | The entire web app: shell and design system, Report, Board and Authority pages |
+| Sumagna Das | [@sumagnadas](https://github.com/sumagnadas) | The agent skill: `SKILL.md`, the bucket reference, and the `triage_check.py` validator |
+| Devanshu Sabharwal | [@DeathSlash945](https://github.com/DeathSlash945) | README and project write-up |
+| Neil | [@Neil-ctrl](https://github.com/Neil-ctrl) | Presentation, demo photos, backup video and submission |
 
 ## AI tools disclosure
 
