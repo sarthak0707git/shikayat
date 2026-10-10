@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* Design tokens. Brief section 7: light, zinc, one accent (indigo-600), Inter. */
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --radius-card: 12px;
+  --radius-control: 10px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+}
+
+body {
+  @apply bg-white font-sans text-zinc-900 antialiased;
+  font-feature-settings: "cv11", "ss01";
+}
+
+:focus-visible {
+  @apply outline-2 outline-offset-2 outline-indigo-600;
+}
+
+/* Anything pressable: instant feedback, nothing else animates. */
+.press {
+  transition: transform 160ms var(--ease-out-strong);
+}
+.press:active {
+  transform: scale(0.97);
+}
+
+/* One entrance, reused: thread items, result cards, list rows. */
+.rise {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 220ms var(--ease-out-strong),
+    transform 220ms var(--ease-out-strong);
+  @starting-style {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* The report count bumping on merge. Replayed by re-keying the element. */
+@keyframes bump {
+  from {
+    transform: translateY(40%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.bump {
+  display: inline-block;
+  animation: bump 260ms var(--ease-out-strong);
+}
+
+.skeleton {
+  @apply rounded-md bg-zinc-100;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .press,
+  .press:active {
+    transform: none;
+  }
+  .rise {
+    transition: opacity 200ms ease;
+    @starting-style {
+      opacity: 0;
+      transform: none;
+    }
+  }
+  .bump {
+    animation: none;
+  }
+}
