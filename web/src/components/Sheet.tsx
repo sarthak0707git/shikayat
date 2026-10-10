@@ -37,7 +37,7 @@ export function Sheet({ open, onClose, label, children, footer }: SheetProps) {
     <div className={cx('fixed inset-0 z-40', !open && 'pointer-events-none')} inert={!open}>
       <div
         onClick={onClose}
-        className={cx('absolute inset-0 bg-ink/40 backdrop-blur-sm transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}
+        className={cx('absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}
       />
       <aside
         role="dialog"

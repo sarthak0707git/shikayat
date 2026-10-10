@@ -89,13 +89,13 @@ export function Daily({ days, note = 'Last 14 days' }: { days?: Stats['daily']; 
         <div className="h-44 text-xs tabular-nums">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={days} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
-              <CartesianGrid vertical={false} stroke="#e4e4e7" />
+              <CartesianGrid vertical={false} stroke="var(--color-zinc-200)" />
               <XAxis
                 dataKey="date"
                 tickFormatter={(value: string) => formatShortDate(value)}
                 interval={3}
                 tickLine={false}
-                axisLine={{ stroke: '#e4e4e7' }}
+                axisLine={{ stroke: 'var(--color-zinc-200)' }}
                 tick={{ fill: '#71717a' }}
               />
               <YAxis allowDecimals={false} width={28} tickLine={false} axisLine={false} tick={{ fill: '#71717a' }} />
@@ -103,14 +103,14 @@ export function Daily({ days, note = 'Last 14 days' }: { days?: Stats['daily']; 
                 cursor={{ stroke: '#a1a1aa' }}
                 labelFormatter={(label) => formatShortDate(String(label))}
                 formatter={(value) => [value, 'Reports']}
-                contentStyle={{ borderRadius: 10, border: '1px solid #e4e4e7', boxShadow: '0 4px 12px rgb(24 24 27 / 0.08)', fontSize: 12 }}
+                contentStyle={{ borderRadius: 10, border: '1px solid var(--color-zinc-200)', background: 'var(--color-white)', color: 'var(--color-ink)', boxShadow: '0 4px 12px rgb(0 0 0 / 0.12)', fontSize: 12 }}
               />
               <Area
                 type="monotone"
                 dataKey="reports"
-                stroke="#4f46e5"
+                stroke="var(--color-indigo-600)"
                 strokeWidth={2.5}
-                fill="#4f46e5"
+                fill="var(--color-indigo-600)"
                 fillOpacity={0.12}
                 isAnimationActive={!still}
                 animationDuration={280}

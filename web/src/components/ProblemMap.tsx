@@ -4,12 +4,12 @@ import { cx, EmptyState, Skeleton } from './ui'
 
 // One fixed step of the ink-to-indigo ramp per domain, so a domain keeps its colour whatever is selected.
 const RAMP = [
-  { fill: '#0d0c14', text: 'text-white', sub: 'text-zinc-400' },
-  { fill: '#312e81', text: 'text-white', sub: 'text-indigo-200' },
-  { fill: '#4f46e5', text: 'text-white', sub: 'text-indigo-100' },
-  { fill: '#818cf8', text: 'text-ink', sub: 'text-indigo-950' },
-  { fill: '#c7d2fe', text: 'text-ink', sub: 'text-indigo-900' },
-  { fill: '#e7e5e4', text: 'text-ink', sub: 'text-zinc-600' },
+  { fill: 'var(--map-1)', text: 'text-white', sub: 'text-zinc-400' },
+  { fill: 'var(--map-2)', text: 'text-white', sub: 'text-indigo-200' },
+  { fill: 'var(--map-3)', text: 'text-white', sub: 'text-indigo-100' },
+  { fill: 'var(--map-4)', text: 'text-ink', sub: 'text-indigo-950' },
+  { fill: 'var(--map-5)', text: 'text-ink', sub: 'text-indigo-900' },
+  { fill: 'var(--map-6)', text: 'text-ink', sub: 'text-zinc-600' },
 ]
 
 const TONE: Record<string, (typeof RAMP)[number]> = {

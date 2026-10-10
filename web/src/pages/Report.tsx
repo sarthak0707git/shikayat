@@ -7,6 +7,7 @@ import { ThinkingOrb } from 'thinking-orbs'
 import { cx, SeverityTag, StatusPill, Ticker } from '../components/ui'
 import { api } from '../lib/api'
 import { place } from '../lib/format'
+import { useTheme } from '../lib/theme'
 import { usePolling } from '../lib/usePolling'
 import type { Complaint, ReportResult } from '../types'
 
@@ -60,6 +61,8 @@ export default function Report() {
   const [threadId, setThreadId] = useState<string | null>(null)
   const [answer, setAnswer] = useState('')
 
+  // The composer card is dark on a light page and light on a dark one; the orb follows the card.
+  const orbTheme = useTheme() === 'dark' ? 'light' : 'dark'
   const textRef = useRef<HTMLTextAreaElement>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const endRef = useRef<HTMLDivElement>(null)
@@ -187,7 +190,7 @@ export default function Report() {
           {/* The composer is the one ink surface on the page: Gemma's desk. */}
           <div className="ink-card rounded-[2rem] bg-ink p-2 text-white">
             <div className="flex items-center gap-3 px-3 pt-2 pb-1">
-              <ThinkingOrb state={orb} size={64} theme="dark" paused={finished} aria-hidden="true" style={{ width: 48, height: 48 }} />
+              <ThinkingOrb state={orb} size={64} theme={orbTheme} paused={finished} aria-hidden="true" style={{ width: 48, height: 48 }} />
               <p role="status" className="min-w-0">
                 <span className="block font-display text-lg leading-tight font-semibold tracking-tight">Gemma 4</span>
                 {busy === 'waiting' ? (

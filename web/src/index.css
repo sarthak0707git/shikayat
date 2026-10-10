@@ -13,6 +13,64 @@
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: light;
+  /* The problem map's six domain colours. */
+  --map-1: #0d0c14;
+  --map-2: #312e81;
+  --map-3: #4f46e5;
+  --map-4: #818cf8;
+  --map-5: #c7d2fe;
+  --map-6: #e7e5e4;
+}
+
+/*
+ * Dark mode. Every component keeps its classes; the neutral and indigo scales are turned
+ * over here, so text-ink becomes light, bg-white becomes a dark surface, and the one
+ * "ink" surface per page (composer, active pill, Open tile) becomes the light one.
+ */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: #0e0d14;
+  --color-white: #181721;
+  --color-ink: #f4f2ec;
+
+  --color-zinc-50: #09090b;
+  --color-zinc-100: #18181b;
+  --color-zinc-200: #27272a;
+  --color-zinc-300: #3f3f46;
+  --color-zinc-400: #52525b;
+  --color-zinc-500: #8b8b94;
+  --color-zinc-600: #a1a1aa;
+  --color-zinc-700: #d4d4d8;
+  --color-zinc-800: #e4e4e7;
+  --color-zinc-900: #f4f4f5;
+  --color-zinc-950: #fafafa;
+
+  --color-indigo-50: #1e1b4b;
+  --color-indigo-100: #312e81;
+  --color-indigo-200: #3730a3;
+  --color-indigo-300: #4338ca;
+  --color-indigo-400: #4f46e5;
+  --color-indigo-500: #7c83f7;
+  --color-indigo-600: #818cf8;
+  --color-indigo-700: #a5b4fc;
+  --color-indigo-800: #c7d2fe;
+  --color-indigo-900: #e0e7ff;
+  --color-indigo-950: #eef2ff;
+
+  /* Status pills: tinted dark chips with light text. */
+  --color-slate-100: #1f2733;
+  --color-slate-700: #cbd5e1;
+  --color-blue-50: #172554;
+  --color-blue-700: #93c5fd;
+  --color-green-50: #052e16;
+  --color-green-700: #86efac;
+
+  --map-1: #f4f2ec;
+  --map-2: #c7d2fe;
+  --map-3: #a5b4fc;
+  --map-4: #4338ca;
+  --map-5: #312e81;
+  --map-6: #27272a;
 }
 
 body {
@@ -213,4 +271,27 @@ a {
   box-shadow: 0 0 0 2px #6366f1;
   pointer-events: none;
   animation: flash 2.8s linear forwards;
+}
+
+/* Surfaces with hand-written colours need their own dark values. */
+html[data-theme="dark"] .glass {
+  background: rgb(24 23 33 / 0.82);
+  border-color: rgb(255 255 255 / 0.08);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 0 0 1px rgb(0 0 0 / 0.4),
+    0 30px 60px -30px rgb(0 0 0 / 0.8);
+}
+html[data-theme="dark"] .tile {
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.07),
+    0 28px 56px -36px rgb(0 0 0 / 0.9);
+}
+html[data-theme="dark"] .ink-card {
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.2),
+    0 40px 80px -40px rgb(0 0 0 / 0.9);
+}
+html[data-theme="dark"] .flash::before {
+  background: rgb(99 102 241 / 0.28);
 }
