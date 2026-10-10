@@ -1,0 +1,12 @@
+.env
+.cache/
+__pycache__/
+.venv/
+notes/
+wheelhouse/
+.pytest_cache/
+uploads/
+data/
+web/node_modules/
+web/dist/
+*.db
