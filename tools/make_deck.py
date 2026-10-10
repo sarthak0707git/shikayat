@@ -18,6 +18,7 @@ sys.path.insert(0, str(ROOT))
 
 OUT = ROOT / "docs" / "Shikayat.pptx"
 SHOT = ROOT / "docs" / "screenshot.png"
+DECK_SHOT = ROOT / "docs" / "screenshot-deck.png"
 
 INK = RGBColor(0x11, 0x18, 0x27)
 MUTED = RGBColor(0x6B, 0x72, 0x80)
@@ -106,155 +107,188 @@ def heading(s, title, kicker=None):
     bar(s, Inches(1.95))
 
 
+def footer(s, page):
+    """A quiet page number and wordmark, so the deck reads as one document."""
+    text(s, Inches(0.9), Inches(6.95), Inches(4), Inches(0.3),
+         "Shikayat", size=10, color=MUTED)
+    text(s, Inches(11.4), Inches(6.95), Inches(1.0), Inches(0.3),
+         str(page), size=10, color=MUTED, align=PP_ALIGN.RIGHT)
+
+
+def stat(s, left, top, value, label, accent=False):
+    """One big number with a caption under it."""
+    text(s, left, top, Inches(2.6), Inches(0.8), value, size=42, bold=True,
+         color=ACCENT if accent else INK)
+    text(s, left, top + Inches(0.72), Inches(2.6), Inches(0.4), label, size=12, color=MUTED)
+
+
 def build():
     n = stats()
     prs = Presentation()
     prs.slide_width, prs.slide_height = W, H
 
-    # ---------- 1. title ----------
-    s = slide(prs)
-    hero = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(0.22), H)
-    hero.fill.solid()
-    hero.fill.fore_color.rgb = ACCENT
-    hero.line.fill.background()
-    hero.shadow.inherit = False
-    text(s, Inches(1.2), Inches(2.1), Inches(11), Inches(1.2), "Shikayat", size=66, bold=True)
-    text(s, Inches(1.2), Inches(3.25), Inches(10.5), Inches(0.9),
-         "Campus complaints that count.", size=26, color=MUTED)
-    text(s, Inches(1.2), Inches(4.3), Inches(10.5), Inches(1.4),
-         "A student writes a complaint in English, Hinglish or Hindi. Gemma 4 buckets it,\n"
-         "spots the duplicates, and asks back when it is unsure.", size=17, color=INK)
-    text(s, Inches(1.2), Inches(6.25), Inches(11), Inches(0.9),
-         [("Sarthak Shrivastava  ·  Vedant  ·  Sumagna Das  ·  Devanshu Sabharwal  ·  Neil", 13, MUTED, False),
-          ("OpenLake × MLH Hack Day  ·  IIT Bhilai  ·  10 October 2026", 13, MUTED, False)], size=13)
+    # ---------- 1. title: dark, so it reads as a cover ----------
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    bg = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, W, H)
+    bg.fill.solid(); bg.fill.fore_color.rgb = INK
+    bg.line.fill.background(); bg.shadow.inherit = False
+    rule = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(1.3), Inches(2.45), Inches(1.1), Pt(6))
+    rule.fill.solid(); rule.fill.fore_color.rgb = ACCENT
+    rule.line.fill.background(); rule.shadow.inherit = False
+    text(s, Inches(1.3), Inches(2.75), Inches(11), Inches(1.4), "Shikayat",
+         size=76, bold=True, color=WHITE)
+    text(s, Inches(1.3), Inches(4.05), Inches(10.5), Inches(0.6),
+         "Campus complaints that count.", size=27, color=RGBColor(0xC7, 0xD2, 0xFE))
+    text(s, Inches(1.3), Inches(4.95), Inches(9.8), Inches(1.0),
+         "A student writes in English, Hinglish or Hindi. Gemma 4 buckets it, spots the "
+         "duplicates, and asks back when it is unsure.", size=16,
+         color=RGBColor(0x9C, 0xA3, 0xAF))
+    text(s, Inches(1.3), Inches(6.35), Inches(11), Inches(0.8),
+         [("Sarthak Shrivastava · Vedant · Sumagna Das · Devanshu Sabharwal · Neil",
+           12, RGBColor(0x6B, 0x72, 0x80), False),
+          ("OpenLake × MLH Hack Day · IIT Bhilai · 10 October 2026",
+           12, RGBColor(0x6B, 0x72, 0x80), False)], size=12)
 
     # ---------- 2. problem ----------
     s = slide(prs, paper=True)
     heading(s, "Complaint portals already exist.", "the problem")
-    text(s, Inches(0.9), Inches(2.5), Inches(5.6), Inches(3),
-         [("They make you fill forms.", 22, INK, True),
-          ("Dropdowns, required fields, a login. So students stop bothering and "
-           "complain in the hostel WhatsApp group instead.", 16, MUTED, False)], spacing=1.3)
-    text(s, Inches(6.9), Inches(2.5), Inches(5.6), Inches(3),
-         [("And they bury wardens in duplicates.", 22, INK, True),
-          ("Forty students report the same dead Wi-Fi forty times. Nobody can tell "
-           "which problem is actually the biggest.", 16, MUTED, False)], spacing=1.3)
-    card(s, Inches(0.9), Inches(5.1), Inches(11.5), Inches(1.4), fill=WHITE)
-    text(s, Inches(1.3), Inches(5.45), Inches(10.8), Inches(0.9),
+    card(s, Inches(0.9), Inches(2.45), Inches(5.5), Inches(2.3), fill=WHITE)
+    text(s, Inches(1.3), Inches(2.75), Inches(4.8), Inches(1.9),
+         [("They make you fill forms.", 21, INK, True),
+          ("Dropdowns, required fields, a login. So students give up and complain in "
+           "the hostel WhatsApp group instead.", 15, MUTED, False)], spacing=1.3)
+    card(s, Inches(6.9), Inches(2.45), Inches(5.5), Inches(2.3), fill=WHITE)
+    text(s, Inches(7.3), Inches(2.75), Inches(4.8), Inches(1.9),
+         [("They bury wardens in duplicates.", 21, INK, True),
+          ("Forty students report the same dead Wi-Fi forty times. Nobody can tell which "
+           "problem is actually the biggest.", 15, MUTED, False)], spacing=1.3)
+    strip = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(5.15),
+                               Inches(11.5), Inches(1.15))
+    strip.fill.solid(); strip.fill.fore_color.rgb = INK
+    strip.line.fill.background(); strip.shadow.inherit = False
+    strip.adjustments[0] = 0.12
+    text(s, Inches(1.4), Inches(5.42), Inches(10.6), Inches(0.6),
          "Nobody counts. So the loudest complaint wins, not the most common one.",
-         size=20, bold=True, color=ACCENT)
+         size=19, bold=True, color=WHITE)
+    footer(s, 2)
 
     # ---------- 3. what we built ----------
     s = slide(prs)
-    text(s, Inches(0.9), Inches(0.62), Inches(11), Inches(0.4),
-         "WHAT WE BUILT", size=12, color=ACCENT, bold=True)
-    text(s, Inches(0.9), Inches(1.0), Inches(11.5), Inches(0.8),
-         "One board, ranked by how much it hurts.", size=32, bold=True)
-    if SHOT.is_file():
-        s.shapes.add_picture(str(SHOT), Inches(0.9), Inches(2.0), width=Inches(7.4))
-    text(s, Inches(8.7), Inches(2.1), Inches(3.8), Inches(4.5),
-         [(f"{n['complaints']} complaints", 24, INK, True),
-          (f"{n['open']} open · {n['escalated']} escalated", 15, MUTED, False),
-          ("", 8, MUTED, False),
-          ("priority = reports × severity", 15, ACCENT, True),
-          ("Computed in code, never by the model. An issue escalates at 5 reports, "
-           "or instantly if it is a safety risk.", 14, MUTED, False),
-          ("", 8, MUTED, False),
-          (f"{n['categories']} buckets", 15, ACCENT, True),
-          ("Each authority — Hostel Office, Mess Committee, IT Cell — sees only its "
-           "own queue.", 14, MUTED, False)], spacing=1.25)
+    text(s, Inches(0.9), Inches(0.6), Inches(11), Inches(0.35),
+         "WHAT WE BUILT", size=11, color=ACCENT, bold=True)
+    text(s, Inches(0.9), Inches(0.95), Inches(11.5), Inches(0.6),
+         "One board, ranked by how much it hurts.", size=30, bold=True)
+    shot = DECK_SHOT if DECK_SHOT.is_file() else SHOT
+    if shot.is_file():
+        card(s, Inches(0.78), Inches(1.78), Inches(7.64), Inches(5.42), fill=PAPER)
+        s.shapes.add_picture(str(shot), Inches(0.9), Inches(1.9), width=Inches(7.4),
+                             height=Inches(5.18))
+    stat(s, Inches(8.9), Inches(1.9), str(n["complaints"]), "complaints")
+    stat(s, Inches(10.9), Inches(1.9), str(n["escalated"]), "escalated", accent=True)
+    text(s, Inches(8.9), Inches(3.3), Inches(3.7), Inches(3.2),
+         [("priority = reports × severity", 15, ACCENT, True),
+          ("Computed in code, never by the model. An issue escalates at five reports, or "
+           "at once if it is a safety risk.", 14, MUTED, False),
+          ("", 7, MUTED, False),
+          (f"{n['categories']} buckets, 7 authorities", 15, ACCENT, True),
+          ("Hostel Office, Mess Committee, IT Cell and the rest each see only their own "
+           "queue.", 14, MUTED, False)], spacing=1.3)
+    footer(s, 3)
 
     # ---------- 4. the differentiator ----------
     s = slide(prs, paper=True)
     heading(s, "Gemma asks back when it is unsure.", "the part nobody else does")
-    text(s, Inches(0.9), Inches(2.4), Inches(5.4), Inches(0.5),
-         "A vague report would normally be filed and ignored:", size=15, color=MUTED)
-    card(s, Inches(0.9), Inches(2.95), Inches(5.4), Inches(2.9), fill=WHITE)
-    text(s, Inches(1.25), Inches(3.2), Inches(4.8), Inches(2.5),
-         [("Student", 11, MUTED, True), ("AC se paani tapak raha hai", 17, INK, False),
-          ("", 7, MUTED, False),
-          ("Gemma", 11, ACCENT, True),
-          ("Kaunse hostel aur kis room mein AC se paani tapak raha hai?", 17, ACCENT, False),
-          ("", 7, MUTED, False),
-          ("Student", 11, MUTED, True), ("BH2 E207", 17, INK, False)], spacing=1.2)
-    text(s, Inches(6.9), Inches(2.4), Inches(5.5), Inches(3.4),
-         [("It replies in the student's own language.", 18, INK, True),
-          ("Hinglish in, Hinglish out. One short question, at most two per report — "
-           "a limit our code enforces, not a rule we hope the model follows.", 15, MUTED, False),
-          ("", 9, MUTED, False),
+    card(s, Inches(0.9), Inches(2.45), Inches(5.5), Inches(3.3), fill=WHITE)
+    text(s, Inches(1.3), Inches(2.7), Inches(4.8), Inches(2.9),
+         [("Student", 10, MUTED, True), ("AC se paani tapak raha hai", 17, INK, False),
+          ("", 6, MUTED, False),
+          ("Gemma", 10, ACCENT, True),
+          ("Kaunse hostel aur kis room mein?", 17, ACCENT, False),
+          ("", 6, MUTED, False),
+          ("Student", 10, MUTED, True), ("BH2 E207", 17, INK, False),
+          ("", 6, MUTED, False),
+          ("Filed #47 · Hostel Office · BH2 (Gopad) E207", 13, MUTED, True)], spacing=1.25)
+    text(s, Inches(6.9), Inches(2.5), Inches(5.5), Inches(3.4),
+         [("In the student's own language.", 18, INK, True),
+          ("Hinglish in, Hinglish out. One short question, at most two per report — a "
+           "limit our code enforces, not a rule we hope the model follows.", 15, MUTED, False),
+          ("", 8, MUTED, False),
           ("It knows what it already has.", 18, INK, True),
-          ("Before deciding, it searches the open complaints. Same issue, same place → "
-           "merged, and the count goes up. Different room → a new complaint.", 15, MUTED, False)],
-         spacing=1.25)
-    card(s, Inches(0.9), Inches(6.1), Inches(11.5), Inches(0.95), fill=WHITE)
-    text(s, Inches(1.3), Inches(6.3), Inches(10.8), Inches(0.6),
-         "Filed as #47 in the Hostel Office queue — BH2 (Gopad), room E207.",
-         size=16, bold=True, color=ACCENT)
+          ("Same issue, same place → merged, and the count goes up. A different room → a "
+           "new complaint. A hostel that does not exist → it asks.", 15, MUTED, False)],
+         spacing=1.3)
+    footer(s, 4)
 
     # ---------- 5. how we use gemma ----------
     s = slide(prs)
     heading(s, "How we use Gemma 4.", "the model")
-    text(s, Inches(0.9), Inches(2.45), Inches(5.5), Inches(2.6),
-         [("gemma-4-26b-a4b-it", 24, ACCENT, True),
-          ("through the Gemini API, with the google-genai package. Every call in the "
-           "project goes through one helper.", 15, MUTED, False),
-          ("", 10, MUTED, False),
-          ("Two calls per complaint.", 20, INK, True),
-          ("One to pick a bucket and look for duplicates. One to decide: file, merge, "
-           "ask or reject. The starter's loop would have taken four.", 15, MUTED, False)],
-         spacing=1.25)
-    card(s, Inches(6.8), Inches(2.45), Inches(5.6), Inches(1.75), fill=INK)
-    text(s, Inches(7.1), Inches(2.72), Inches(5.0), Inches(1.3),
-         [("# gemma_client.py", 12, RGBColor(0x9C, 0xA3, 0xAF), False),
-          ("client.models.generate_content(", 13, WHITE, False),
-          ("    model=\"gemma-4-26b-a4b-it\",", 13, RGBColor(0xA5, 0xB4, 0xFC), False),
-          ("    contents=contents, config=config)", 13, WHITE, False)],
-         spacing=1.15, font="Courier New")
-    text(s, Inches(6.8), Inches(4.5), Inches(5.6), Inches(2.4),
+    text(s, Inches(0.9), Inches(2.45), Inches(5.4), Inches(2.8),
+         [("gemma-4-26b-a4b-it", 23, ACCENT, True),
+          ("through the Gemini API, with google-genai. Every call in the project goes "
+           "through one helper.", 15, MUTED, False),
+          ("", 9, MUTED, False),
+          ("Two calls per complaint.", 19, INK, True),
+          ("One to pick a bucket and look for duplicates. One to decide: file, merge, ask "
+           "or reject. The starter's loop needed four.", 15, MUTED, False)], spacing=1.3)
+    code = card(s, Inches(6.9), Inches(2.45), Inches(5.5), Inches(1.6), fill=INK)
+    text(s, Inches(7.2), Inches(2.68), Inches(5.0), Inches(1.2),
+         [("# gemma_client.py", 11, RGBColor(0x6B, 0x72, 0x80), False),
+          ("client.models.generate_content(", 12, WHITE, False),
+          ('    model="gemma-4-26b-a4b-it",', 12, RGBColor(0xA5, 0xB4, 0xFC), False),
+          ("    contents=contents, config=config)", 12, WHITE, False)],
+         spacing=1.2, font="Courier New")
+    text(s, Inches(6.9), Inches(4.35), Inches(5.5), Inches(2.2),
          [("The model never decides:", 16, INK, True),
           ("priority · escalation · complaint ids · how many questions it may ask",
-           15, MUTED, False),
-          ("", 8, MUTED, False),
-          ("All four are enforced in our code. merge_into rejects any id that was not "
-           "in the search results it was just shown.", 15, MUTED, False)], spacing=1.25)
+           14, ACCENT, False),
+          ("All four are enforced in our code. merge_into rejects any id that was not in "
+           "the search results it was just shown.", 14, MUTED, False)], spacing=1.3)
+    footer(s, 5)
 
     # ---------- 6. the harness ----------
     s = slide(prs, paper=True)
     heading(s, "What we changed in the harness.", "our open-source contribution")
     rows = [
-        ("Per-agent tool sets", "Each agent sends only the tools it needs, not everything registered."),
-        ("Image input", "A photo of an insect on a plate is the evidence. Sent as inline bytes."),
-        ("Terminal tools", "@tool(stop=True) ends the run with its own result — no extra model round."),
-        ("Pause for a human", "@tool(pause=True) returns the question, then resumes the same conversation."),
-        ("Step labels + RunResult", "The UI shows \"Looking for similar reports in Mess\" instead of a spinner."),
+        ("Per-agent tool sets", "Each agent sends only the tools it needs."),
+        ("Image input", "A photo is evidence. Sent as inline bytes."),
+        ("Terminal tools", "@tool(stop=True) ends the run with its own result."),
+        ("Pause for a human", "@tool(pause=True) asks, then resumes the same conversation."),
+        ("Step labels + RunResult", 'The UI shows "Looking for similar reports in Mess".'),
     ]
-    top = Inches(2.45)
+    top = Inches(2.4)
     for title_text, why in rows:
-        bar(s, top + Inches(0.1), left=Inches(0.9), width=Pt(4), height=Inches(0.52))
-        text(s, Inches(1.2), top, Inches(3.5), Inches(0.5), title_text, size=16, bold=True)
-        text(s, Inches(4.8), top, Inches(7.6), Inches(0.5), why, size=14, color=MUTED)
-        top = top + Inches(0.72)
-    card(s, Inches(0.9), Inches(6.25), Inches(11.5), Inches(0.85), fill=WHITE)
-    text(s, Inches(1.3), Inches(6.45), Inches(10.8), Inches(0.5),
-         "4 Gemma calls → 2.   34 tests, all on a fake model, so they run with no API key.",
-         size=16, bold=True, color=ACCENT)
+        bar(s, top + Inches(0.06), left=Inches(0.9), width=Pt(4), height=Inches(0.46))
+        text(s, Inches(1.25), top, Inches(3.6), Inches(0.45), title_text, size=16, bold=True)
+        text(s, Inches(5.0), top, Inches(7.4), Inches(0.45), why, size=14, color=MUTED)
+        top = top + Inches(0.66)
+    strip = s.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.9), Inches(5.95),
+                               Inches(11.5), Inches(1.0))
+    strip.fill.solid(); strip.fill.fore_color.rgb = INK
+    strip.line.fill.background(); strip.shadow.inherit = False
+    strip.adjustments[0] = 0.14
+    text(s, Inches(1.4), Inches(6.18), Inches(10.6), Inches(0.5),
+         "4 Gemma calls → 2.    36 tests, all on a fake model, so they run with no API key.",
+         size=17, bold=True, color=WHITE)
+    footer(s, 6)
 
     # ---------- 7. next ----------
     s = slide(prs)
     heading(s, "What we would do next.", "next")
     items = [
-        ("Institute SSO", "The role picker is a demo stand-in. Real deployment authenticates against the institute."),
-        ("Object storage for photos", "Photos are on local disk today. Production would use S3 or Cloud Storage."),
-        ("WhatsApp intake", "Students already complain in hostel groups. Meet them where they are."),
-        ("Promote the Other bucket", "Four students reported laundry issues. Admin can turn a suggestion into a real category."),
+        ("Institute SSO", "The role picker is a demo stand-in."),
+        ("Object storage for photos", "Local disk today; S3 or Cloud Storage in production."),
+        ("WhatsApp intake", "Students already complain in hostel groups. Meet them there."),
+        ("Promote the Other bucket", "Four laundry reports. Admin turns a suggestion into a category."),
     ]
     top = Inches(2.5)
     for title_text, why in items:
-        text(s, Inches(0.9), top, Inches(3.6), Inches(0.5), title_text, size=17, bold=True, color=ACCENT)
-        text(s, Inches(4.8), top, Inches(7.6), Inches(0.6), why, size=14, color=MUTED)
-        top = top + Inches(0.85)
-    text(s, Inches(0.9), Inches(6.5), Inches(11.5), Inches(0.5),
-         "github.com/sarthak0707git/shikayat   ·   MIT", size=14, color=MUTED)
+        text(s, Inches(0.9), top, Inches(3.9), Inches(0.45), title_text, size=17, bold=True,
+             color=ACCENT)
+        text(s, Inches(5.0), top, Inches(7.4), Inches(0.5), why, size=14, color=MUTED)
+        top = top + Inches(0.82)
+    text(s, Inches(0.9), Inches(6.3), Inches(11.5), Inches(0.4),
+         "github.com/sarthak0707git/shikayat   ·   MIT   ·   built today", size=14, color=MUTED)
+    footer(s, 7)
 
     OUT.parent.mkdir(exist_ok=True)
     prs.save(OUT)
