@@ -107,6 +107,9 @@ def canonical_building(name):
             return building
         if code and low.replace(" ", "").startswith(code):           # "bh 2", "bh2 hostel"
             return building
+    for alias, building in cats.BUILDING_ALIASES.items():
+        if alias in low:
+            return building
     if "mess" in low:
         return cats.DEFAULT_MESS
     if "acad" in low or "lecture" in low or "class" in low:
@@ -200,9 +203,14 @@ def file_new(category: str, severity: str, summary: str, details: str = "", buil
         return "Error: write a short neutral summary of 12 words or fewer."
 
     row = resolve_category(category)
+    given_building = (building or "").strip()
     building = canonical_building(building)
     if row["domain"] == "Mess":
         building = building or cats.DEFAULT_MESS
+    # A place that is not on this campus is not a detail we can file against.
+    if given_building and not building:
+        return (f"Error: {given_building!r} is not a building on this campus. The buildings are: "
+                f"{', '.join(cats.BUILDINGS)}. Ask the student which one they mean.")
 
     missing = missing_for(row, building, spot, meal)
     if missing and ctx["questions_asked"] < MAX_QUESTIONS:

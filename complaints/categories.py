@@ -29,10 +29,23 @@ BUILDINGS = [
     "BH1 (Kanhar)",
     "BH2 (Gopad)",
     "GH1 (Indravati)",
-    "MSH (Married Hostel)",
+    "MSH (Shivnath)",
     "Mess",
+    "ED1",
+    "ED2",
+    "SD1",
+    "SD2",
     "Academic Building",
 ]
+
+# Things students call these places that are not the canonical string.
+BUILDING_ALIASES = {
+    "kanhar": "BH1 (Kanhar)", "bh1": "BH1 (Kanhar)",
+    "gopad": "BH2 (Gopad)", "bh2": "BH2 (Gopad)",
+    "indravati": "GH1 (Indravati)", "gh1": "GH1 (Indravati)",
+    "shivnath": "MSH (Shivnath)", "msh": "MSH (Shivnath)",
+    "married hostel": "MSH (Shivnath)", "mh": "MSH (Shivnath)",
+}
 
 # The mess is the only one, so Gemma never has to ask which.
 DEFAULT_MESS = "Mess"
