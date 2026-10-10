@@ -29,12 +29,24 @@ async function shrinkPhoto(file: File, max = 1280): Promise<Blob> {
     const bitmap = await createImageBitmap(file)
     const scale = Math.min(1, max / Math.max(bitmap.width, bitmap.height))
     const canvas = document.createElement('canvas')
-    canvas.width = Math.round(bitmap.width * scale)
-    canvas.height = Math.round(bitmap.height * scale)
-    canvas.getContext('2d')!.drawImage(bitmap, 0, 0, canvas.width, canvas.height)
-    bitmap.close()
+    const width = (canvas.width = Math.round(bitmap.width * scale))
+    const height = (canvas.height = Math.round(bitmap.height * scale))
+    // A CPU canvas: reading pixels back from a GPU one can come out black on some machines.
+    const context = canvas.getContext('2d', { willReadFrequently: true })
+    if (!context) return file
+    context.fillStyle = '#fff' // JPEG has no transparency; without this, clear pixels turn black
+    context.fillRect(0, 0, width, height)
+    context.drawImage(bitmap, 0, 0, width, height)
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.85))
-    return blob ?? file
+    bitmap.close() // only once the pixels have been read
+    // If every sampled pixel is the same colour the draw failed: send the original instead.
+    const first = context.getImageData(0, 0, 1, 1).data
+    let flat = true
+    for (let i = 1; i < 64 && flat; i++) {
+      const pixel = context.getImageData(Math.floor(((i % 8) + 0.5) * (width / 8)), Math.floor((Math.floor(i / 8) + 0.5) * (height / 8)), 1, 1).data
+      flat = pixel[0] === first[0] && pixel[1] === first[1] && pixel[2] === first[2]
+    }
+    return blob && !flat ? blob : file
   } catch {
     return file
   }

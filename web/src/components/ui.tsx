@@ -1,3 +1,4 @@
+import { Search, X } from 'lucide-react'
 import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import type { Severity, Status } from '../types'
 
@@ -149,5 +150,33 @@ export function EmptyState({ title, hint }: { title: string; hint?: string }) {
       <p className="text-sm font-medium text-zinc-900">{title}</p>
       {hint && <p className="mt-1 text-sm text-zinc-500">{hint}</p>}
     </div>
+  )
+}
+
+export function SearchBox({ value, onChange, label, className }: { value: string; onChange: (value: string) => void; label: string; className?: string }) {
+  return (
+    <label className={cx('relative flex h-11 items-center sm:h-10', className)}>
+      <span className="sr-only">{label}</span>
+      <Search className="pointer-events-none absolute left-3.5 size-4 text-zinc-400" aria-hidden="true" />
+      <input
+        type="search"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={label}
+        autoComplete="off"
+        spellCheck={false}
+        className="h-full w-full rounded-full bg-white pr-10 pl-10 text-base text-ink ring-1 ring-zinc-900/10 outline-none transition-shadow duration-150 placeholder:text-zinc-400 focus:ring-2 focus:ring-indigo-600 sm:text-sm [&::-webkit-search-cancel-button]:hidden"
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={() => onChange('')}
+          aria-label="Clear search"
+          className="absolute right-1 flex size-9 items-center justify-center rounded-full text-zinc-500 transition-colors duration-150 hover:bg-zinc-900/5 hover:text-ink sm:size-8"
+        >
+          <X className="size-4" aria-hidden="true" />
+        </button>
+      )}
+    </label>
   )
 }

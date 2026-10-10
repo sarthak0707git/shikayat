@@ -1,4 +1,4 @@
-import { CircleCheck, Flame, Inbox, TrendingUp, type LucideIcon } from 'lucide-react'
+import { Camera, CircleCheck, Flame, Inbox, TrendingUp, type LucideIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useSearchParams } from 'react-router-dom'
@@ -6,9 +6,9 @@ import { toast } from 'sonner'
 import { ByDomain, Daily } from '../components/BoardCharts'
 import { ProblemMap } from '../components/ProblemMap'
 import { Sheet } from '../components/Sheet'
-import { Button, CountBadge, cx, EmptyState, PageHeader, SEVERITY_FILL, SeverityTag, Skeleton, StatusPill, Ticker } from '../components/ui'
+import { Button, CountBadge, cx, EmptyState, PageHeader, SearchBox, SEVERITY_FILL, SeverityTag, Skeleton, StatusPill, Ticker } from '../components/ui'
 import { api } from '../lib/api'
-import { formatDate, formatTime, place, plural, timeAgo } from '../lib/format'
+import { formatDate, formatTime, matches, place, plural, timeAgo } from '../lib/format'
 import { usePolling } from '../lib/usePolling'
 import { DOMAINS, type Complaint, type Severity } from '../types'
 
@@ -46,6 +46,7 @@ export default function Board() {
   const [flash, setFlash] = useState<Set<number>>(new Set())
   const [picked, setPicked] = useState<Complaint | null>(null)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [query, setQuery] = useState('')
   const seen = useRef(new Map<number, number>())
   const flashTimer = useRef(0)
 
@@ -159,6 +160,8 @@ export default function Board() {
             active={complaints ? active : undefined}
             resolved={resolved}
             flash={flash}
+            query={query}
+            onQuery={setQuery}
             onOpen={(c) => {
               setPicked(c)
               setSheetOpen(true)
@@ -266,20 +269,33 @@ function TopPriority({ items }: { items?: Complaint[] }) {
   )
 }
 
-type RankedProps = { active?: Complaint[]; resolved: Complaint[]; flash: Set<number>; onOpen: (c: Complaint) => void }
+type RankedProps = {
+  active?: Complaint[]
+  resolved: Complaint[]
+  flash: Set<number>
+  query: string
+  onQuery: (value: string) => void
+  onOpen: (c: Complaint) => void
+}
 
-function Ranked({ active, resolved, flash, onOpen }: RankedProps) {
+function Ranked({ active, resolved, flash, query, onQuery, onOpen }: RankedProps) {
+  // Rank is the place in the full list, so it does not change while you search.
+  const rows = (active ?? []).map((c, index) => ({ c, rank: index + 1 })).filter((row) => matches(row.c, query))
+  const done = resolved.filter((c) => matches(c, query))
   return (
     <section className="tile p-6" aria-labelledby="all-issues">
-      <div className="flex items-baseline justify-between pb-2">
-        <h2 id="all-issues" className="font-display text-xl font-semibold tracking-tight text-ink">
-          All issues
-        </h2>
-        {active && (
-          <p className="text-xs text-zinc-500 tabular-nums">
-            {active.length} active · {resolved.length} resolved
-          </p>
-        )}
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pb-3">
+        <div className="flex items-baseline gap-3">
+          <h2 id="all-issues" className="font-display text-xl font-semibold tracking-tight text-ink">
+            All issues
+          </h2>
+          {active && (
+            <p className="text-xs text-zinc-500 tabular-nums">
+              {query.trim() ? `${rows.length + done.length} of ${active.length + resolved.length}` : `${active.length} active · ${resolved.length} resolved`}
+            </p>
+          )}
+        </div>
+        <SearchBox value={query} onChange={onQuery} label="Search issues, places, #number" className="w-full sm:w-80" />
       </div>
 
       {!active ? (
@@ -290,12 +306,14 @@ function Ranked({ active, resolved, flash, onOpen }: RankedProps) {
         </div>
       ) : active.length + resolved.length === 0 ? (
         <EmptyState title="No complaints yet" hint="Reports from students show up here as soon as they are filed." />
+      ) : rows.length + done.length === 0 ? (
+        <EmptyState title={`Nothing matches "${query.trim()}"`} hint="Try a place, a kind of problem, or a complaint number like #48." />
       ) : (
         <ol className="rise divide-y divide-zinc-900/[0.07]">
-          {active.map((c, index) => (
-            <Row key={c.id} complaint={c} rank={index + 1} lit={flash.has(c.id)} onOpen={onOpen} />
+          {rows.map(({ c, rank }) => (
+            <Row key={c.id} complaint={c} rank={rank} lit={flash.has(c.id)} onOpen={onOpen} />
           ))}
-          {resolved.map((c) => (
+          {done.map((c) => (
             <Row key={c.id} complaint={c} lit={flash.has(c.id)} onOpen={onOpen} />
           ))}
         </ol>
@@ -337,6 +355,12 @@ function Row({ complaint: c, rank, lit, onOpen }: RowProps) {
           <p className="mt-0.5 text-sm text-zinc-500">
             {[c.domain, c.category, place(c)].filter(Boolean).join(' · ')}
             <span className="text-zinc-400"> · last reported {timeAgo(c.last_reported_at)}</span>
+            {c.photo_count > 0 && (
+              <span className="ml-2 inline-flex items-center gap-1 align-middle text-xs font-medium text-zinc-600">
+                <Camera className="size-3.5" aria-hidden="true" />
+                {plural(c.photo_count, 'photo')}
+              </span>
+            )}
           </p>
         </div>
       </div>
@@ -363,6 +387,7 @@ function PublicDetail({ complaint: c }: { complaint: Complaint }) {
     { label: 'Last reported', value: `${formatDate(c.last_reported_at)}, ${formatTime(c.last_reported_at)}` },
     { label: 'Handled by', value: c.authority },
     { label: 'Where', value: place(c) || 'Not specified' },
+    { label: 'Photos', value: c.photo_count ? `${plural(c.photo_count, 'photo')}, with the authority` : 'None' },
   ]
   return (
     <div className="flex flex-col gap-6">

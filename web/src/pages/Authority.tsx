@@ -1,10 +1,11 @@
 import { Flag } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Sheet } from '../components/Sheet'
-import { Button, CountBadge, cx, EmptyState, PageHeader, SeverityTag, Skeleton, StatusPill } from '../components/ui'
+import { Button, CountBadge, cx, EmptyState, PageHeader, SearchBox, SeverityTag, Skeleton, StatusPill } from '../components/ui'
 import { api } from '../lib/api'
-import { formatDate, formatTime, place, plural, timeAgo } from '../lib/format'
+import { formatDate, formatTime, matches, place, plural, timeAgo } from '../lib/format'
 import { usePolling } from '../lib/usePolling'
 import { AUTHORITIES, type Complaint, type ComplaintDetail, type Status } from '../types'
 
@@ -17,9 +18,15 @@ const DONE: Record<Status, string> = {
 }
 
 export default function Authority() {
-  const [authority, setAuthority] = useState<string>(AUTHORITIES[0])
+  // /authority?as=Estate Office&open=48 lands on that office with the complaint open.
+  const [params, setParams] = useSearchParams()
+  const [authority, setAuthority] = useState<string>(() => {
+    const asked = params.get('as') ?? ''
+    return (AUTHORITIES as readonly string[]).includes(asked) ? asked : AUTHORITIES[0]
+  })
   const [selected, setSelected] = useState<Complaint | null>(null)
   const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState('')
 
   const queue = usePolling(() => api.complaints({ authority }), authority)
   const suggestions = usePolling(() => api.stats().then((stats) => stats.other_suggestions), 'suggestions', 30000)
@@ -31,6 +38,18 @@ export default function Authority() {
   const all = queue.data
   const active = all?.filter((c) => c.status !== 'resolved') ?? []
   const resolved = all?.filter((c) => c.status === 'resolved') ?? []
+  const shown = [...active, ...resolved].filter((c) => matches(c, query))
+
+  const wanted = Number(params.get('open')) || null
+  useEffect(() => {
+    if (!wanted || !all) return
+    const match = all.find((c) => c.id === wanted)
+    if (match) {
+      setSelected(match)
+      setOpen(true)
+    }
+    setParams({}, { replace: true })
+  }, [wanted, all])
 
   function show(complaint: Complaint) {
     setSelected(complaint)
@@ -78,6 +97,12 @@ export default function Authority() {
       )}
 
       <div className="tile px-4 py-4 sm:px-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+        <p className="text-sm text-zinc-600 tabular-nums">
+          {all ? (query.trim() ? `${shown.length} of ${all.length} complaints` : `${active.length} active · ${resolved.length} resolved`) : ' '}
+        </p>
+        <SearchBox value={query} onChange={setQuery} label="Search this queue" className="w-full sm:w-80" />
+      </div>
       <div className={cx('hidden border-b border-zinc-900/10 pb-3 text-xs font-medium text-zinc-500', COLUMNS)}>
         <span>Complaint</span>
         <span>Severity</span>
@@ -101,9 +126,11 @@ export default function Authority() {
         </div>
       ) : all.length === 0 ? (
         <EmptyState title={`Nothing in the ${authority} queue`} hint="New complaints for this office will appear here." />
+      ) : shown.length === 0 ? (
+        <EmptyState title={`Nothing matches "${query.trim()}"`} hint="Try a place, a kind of problem, or a complaint number like #48." />
       ) : (
         <ul className="divide-y divide-zinc-900/[0.07]">
-          {[...active, ...resolved].map((c) => (
+          {shown.map((c) => (
             <li key={c.id}>
               <QueueRow complaint={c} onOpen={() => show(c)} />
             </li>
@@ -205,6 +232,7 @@ function Detail({ summary, onChanged }: { summary: Complaint; onChanged: (next: 
 
   const c = summary
   const reports = detail?.reports
+  const photos = reports?.filter((r) => r.photo_url) ?? []
   const quiet = reports && !reports.some((r) => r.photo_url || r.followups.length)
 
   return (
@@ -227,6 +255,34 @@ function Detail({ summary, onChanged }: { summary: Complaint; onChanged: (next: 
           )}
         </div>
       </div>
+
+      {(c.photo_count > 0 || photos.length > 0) && (
+        <section aria-labelledby="evidence">
+          <h3 id="evidence" className="text-sm font-semibold text-zinc-900">
+            Photos from students
+          </h3>
+          {!reports ? (
+            <Skeleton className="mt-3 h-44" />
+          ) : (
+            <ul className={cx('mt-3 grid gap-2', photos.length > 1 ? 'grid-cols-2' : 'grid-cols-1')}>
+              {photos.map((report) => (
+                <li key={report.id}>
+                  <a href={report.photo_url!} target="_blank" rel="noreferrer" className="block overflow-hidden rounded-2xl bg-zinc-100 ring-1 ring-zinc-900/10">
+                    <img
+                      src={report.photo_url!}
+                      alt={`Photo sent on ${formatDate(report.created_at)}`}
+                      className={cx('w-full object-cover', photos.length > 1 ? 'aspect-square' : 'max-h-72')}
+                    />
+                  </a>
+                  <p className="mt-1 text-xs text-zinc-500">
+                    {formatDate(report.created_at)}, {formatTime(report.created_at)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )}
 
       <dl className="grid grid-cols-2 gap-x-4 gap-y-3 border-y border-zinc-200 py-4 text-sm">
         <Fact label="First reported" value={`${formatDate(c.first_reported_at)}, ${formatTime(c.first_reported_at)}`} />
@@ -291,17 +347,8 @@ function Detail({ summary, onChanged }: { summary: Complaint; onChanged: (next: 
                   <p className="mt-1 text-xs text-zinc-500">
                     {formatDate(report.created_at)}, {formatTime(report.created_at)}
                     {report.merge_reason && ` · Merged: ${report.merge_reason}`}
+                    {report.photo_url && ' · Sent a photo'}
                   </p>
-                  {report.photo_url && (
-                    <a href={report.photo_url} target="_blank" rel="noreferrer" className="mt-3 block w-fit">
-                      <img
-                        src={report.photo_url}
-                        alt="Photo attached to this report"
-                        loading="lazy"
-                        className="max-h-56 rounded-xl border border-zinc-200 object-cover"
-                      />
-                    </a>
-                  )}
                   {report.followups.length > 0 && (
                     <dl className="mt-3 flex flex-col gap-2 border-l-2 border-zinc-200 pl-3 text-sm">
                       {report.followups.map((item, index) => (

@@ -49,3 +49,14 @@ export function ordinal(n: number) {
 }
 
 export const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`
+
+/** Every word of the query must appear somewhere in the complaint: summary, place, category, "#48", status. */
+export function matches(c: Complaint, query: string) {
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean)
+  if (!words.length) return true
+  const haystack = [`#${c.id}`, c.summary, c.domain, c.category, c.authority, c.building, c.spot, c.meal, c.severity, c.status.replace('_', ' ')]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+  return words.every((word) => haystack.includes(word))
+}
