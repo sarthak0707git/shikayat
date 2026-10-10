@@ -9,7 +9,8 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true, // so a judge's phone on the same Wi-Fi can open it
+    allowedHosts: true, // reachable through a tunnel hostname
     proxy: { '/api': API, '/uploads': API },
   },
-  preview: { port: 4173, proxy: { '/api': API, '/uploads': API } },
+  preview: { port: 4173, host: true, allowedHosts: true, proxy: { '/api': API, '/uploads': API } },
 })
