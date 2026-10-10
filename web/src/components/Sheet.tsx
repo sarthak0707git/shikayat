@@ -37,16 +37,16 @@ export function Sheet({ open, onClose, label, children, footer }: SheetProps) {
     <div className={cx('fixed inset-0 z-40', !open && 'pointer-events-none')} inert={!open}>
       <div
         onClick={onClose}
-        className={cx('absolute inset-0 bg-zinc-950/30 transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}
+        className={cx('absolute inset-0 bg-ink/40 backdrop-blur-sm transition-opacity duration-200', open ? 'opacity-100' : 'opacity-0')}
       />
       <aside
         role="dialog"
         aria-modal="true"
         aria-label={label}
         className={cx(
-          'sheet absolute inset-y-0 right-0 flex w-full max-w-lg flex-col border-l border-zinc-200 bg-white shadow-xl',
+          'sheet absolute inset-y-2 right-2 left-2 flex flex-col overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-zinc-900/10 sm:left-auto sm:w-full sm:max-w-lg',
           'transition-transform duration-[280ms] ease-drawer',
-          open ? 'translate-x-0' : 'translate-x-full',
+          open ? 'translate-x-0' : 'translate-x-[calc(100%+1rem)]',
         )}
       >
         <div className="flex items-center justify-between gap-4 border-b border-zinc-200 py-2 pr-2 pl-5">
@@ -56,7 +56,7 @@ export function Sheet({ open, onClose, label, children, footer }: SheetProps) {
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="press flex size-11 shrink-0 items-center justify-center rounded-[10px] text-zinc-500 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
+            className="press flex size-11 shrink-0 items-center justify-center rounded-full text-zinc-500 transition-colors duration-150 hover:bg-zinc-100 hover:text-zinc-900"
           >
             <X className="size-5" aria-hidden="true" />
           </button>

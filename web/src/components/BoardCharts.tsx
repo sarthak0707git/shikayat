@@ -13,9 +13,9 @@ const STATUS_PARTS = [
 export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
   const max = Math.max(1, ...(rows ?? []).map((row) => row.open + row.in_progress + row.resolved))
   return (
-    <section className="py-8" aria-labelledby="by-domain">
+    <section aria-labelledby="by-domain">
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 pb-4">
-        <h2 id="by-domain" className="text-sm font-semibold text-zinc-900">
+        <h2 id="by-domain" className="font-display text-xl font-semibold tracking-tight text-ink">
           By domain
         </h2>
         <ul className="flex gap-4" aria-label="Status colours">
@@ -39,7 +39,7 @@ export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
               <li key={row.domain} className="grid grid-cols-[5rem_minmax(0,1fr)_2rem] items-center gap-3 text-sm">
                 <span className="truncate text-zinc-700">{row.domain}</span>
                 <span
-                  className="flex h-2.5 gap-px overflow-hidden rounded-full"
+                  className="flex h-3 gap-0.5 overflow-hidden rounded-full"
                   style={{ width: `${(total / max) * 100}%` }}
                   role="img"
                   aria-label={`${row.open} open, ${row.in_progress} in progress, ${row.resolved} resolved`}
@@ -61,15 +61,15 @@ export function ByDomain({ rows }: { rows?: Stats['by_domain'] }) {
 export function Daily({ days }: { days?: Stats['daily'] }) {
   const still = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   return (
-    <section className="border-t border-zinc-200 py-8" aria-labelledby="daily">
-      <h2 id="daily" className="text-sm font-semibold text-zinc-900">
+    <section aria-labelledby="daily">
+      <h2 id="daily" className="font-display text-xl font-semibold tracking-tight text-ink">
         Reports per day
       </h2>
       <p className="mt-0.5 pb-4 text-xs text-zinc-500">Last 14 days</p>
       {!days ? (
         <Skeleton className="h-40" />
       ) : (
-        <div className="h-40 text-xs tabular-nums">
+        <div className="h-44 text-xs tabular-nums">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={days} margin={{ top: 4, right: 4, bottom: 0, left: 0 }}>
               <CartesianGrid vertical={false} stroke="#e4e4e7" />
@@ -92,9 +92,9 @@ export function Daily({ days }: { days?: Stats['daily'] }) {
                 type="monotone"
                 dataKey="reports"
                 stroke="#4f46e5"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 fill="#4f46e5"
-                fillOpacity={0.08}
+                fillOpacity={0.12}
                 isAnimationActive={!still}
                 animationDuration={280}
               />

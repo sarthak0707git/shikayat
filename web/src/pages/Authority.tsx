@@ -38,8 +38,8 @@ export default function Authority() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <PageHeader title="Authority queue" description="Each office sees only its own complaints. A demo role picker stands in for institute SSO.">
+    <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+      <PageHeader title="Your queue, nobody else's." description="Each office sees only its own complaints, escalated ones first. A demo role picker stands in for institute SSO.">
         <div className="flex flex-col gap-2">
           <label htmlFor="viewing-as" className="text-xs font-medium text-zinc-500">
             Viewing as
@@ -51,7 +51,7 @@ export default function Authority() {
               setAuthority(event.target.value)
               setOpen(false)
             }}
-            className="h-11 min-w-48 rounded-[10px] border border-zinc-300 bg-white px-3 text-base font-medium text-zinc-900 sm:h-9 sm:text-sm"
+            className="h-11 min-w-52 rounded-full bg-white px-4 text-base font-medium text-ink ring-1 ring-zinc-900/10"
           >
             {AUTHORITIES.map((name) => (
               <option key={name}>{name}</option>
@@ -61,8 +61,8 @@ export default function Authority() {
       </PageHeader>
 
       {authority === 'Admin' && suggestions.data && suggestions.data.length > 0 && (
-        <section className="mb-6 border-y border-zinc-200 py-4" aria-labelledby="suggested">
-          <h2 id="suggested" className="text-sm font-semibold text-zinc-900">
+        <section className="tile mb-3 p-6" aria-labelledby="suggested">
+          <h2 id="suggested" className="font-display text-xl font-semibold tracking-tight text-ink">
             Suggested new categories
           </h2>
           <p className="mt-0.5 text-xs text-zinc-500">Gemma filed these under Other and proposed a name. Promote the ones that keep coming up.</p>
@@ -77,7 +77,8 @@ export default function Authority() {
         </section>
       )}
 
-      <div className={cx('hidden border-b border-zinc-200 pb-2 text-xs font-medium text-zinc-500', COLUMNS)}>
+      <div className="tile px-4 py-4 sm:px-6">
+      <div className={cx('hidden border-b border-zinc-900/10 pb-3 text-xs font-medium text-zinc-500', COLUMNS)}>
         <span>Complaint</span>
         <span>Severity</span>
         <span className="text-right">Reports</span>
@@ -101,7 +102,7 @@ export default function Authority() {
       ) : all.length === 0 ? (
         <EmptyState title={`Nothing in the ${authority} queue`} hint="New complaints for this office will appear here." />
       ) : (
-        <ul className="divide-y divide-zinc-200 border-t border-zinc-200 sm:border-t-0">
+        <ul className="divide-y divide-zinc-900/[0.07]">
           {[...active, ...resolved].map((c) => (
             <li key={c.id}>
               <QueueRow complaint={c} onOpen={() => show(c)} />
@@ -109,6 +110,8 @@ export default function Authority() {
           ))}
         </ul>
       )}
+
+      </div>
 
       <Sheet open={open} onClose={() => setOpen(false)} label={selected ? `Complaint #${selected.id} · ${selected.authority}` : 'Complaint'}>
         {selected && (
@@ -207,7 +210,7 @@ function Detail({ summary, onChanged }: { summary: Complaint; onChanged: (next: 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-lg leading-snug font-semibold tracking-tight text-zinc-900">{c.summary}</h2>
+        <h2 className="font-display text-2xl leading-tight font-bold tracking-tight text-ink">{c.summary}</h2>
         <p className="mt-1 text-sm text-zinc-500">{[c.domain, c.category, place(c)].filter(Boolean).join(' · ')}</p>
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
           <StatusPill status={c.status} />
@@ -242,7 +245,7 @@ function Detail({ summary, onChanged }: { summary: Complaint; onChanged: (next: 
           onChange={(event) => setNote(event.target.value)}
           rows={2}
           placeholder="Plumber booked for tomorrow morning"
-          className="block w-full resize-none rounded-[10px] border border-zinc-300 p-3 text-base text-zinc-900 outline-none transition-colors duration-150 placeholder:text-zinc-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 sm:text-sm"
+          className="block w-full resize-none rounded-2xl border border-zinc-300 p-3 text-base text-zinc-900 outline-none transition-colors duration-150 placeholder:text-zinc-400 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 sm:text-sm"
         />
         <p className="text-xs text-zinc-500">Optional. Saved with the status change.</p>
         <div className="flex flex-wrap gap-2 pt-1">
