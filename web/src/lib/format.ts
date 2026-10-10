@@ -1,14 +1,26 @@
 import type { Complaint } from '../types'
 
 const IST = 'Asia/Kolkata'
-const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', timeZone: IST })
-const shortDateFmt = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: IST })
+const partsFmt = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: 'short', year: 'numeric', timeZone: IST })
 const timeFmt = new Intl.DateTimeFormat('en-IN', { hour: 'numeric', minute: '2-digit', hour12: true, timeZone: IST })
 
+// Assembled by hand so the month is always three letters ("Sep", never "Sept").
+function dateParts(iso: string) {
+  const parts = Object.fromEntries(partsFmt.formatToParts(new Date(iso)).map((part) => [part.type, part.value]))
+  return { day: parts.day, month: parts.month, year: parts.year }
+}
+
 /** 10 Oct 2026 */
-export const formatDate = (iso: string | null) => (iso ? dateFmt.format(new Date(iso)) : '')
+export function formatDate(iso: string | null) {
+  if (!iso) return ''
+  const { day, month, year } = dateParts(iso)
+  return `${day} ${month} ${year}`
+}
 /** 10 Oct */
-export const formatShortDate = (iso: string) => shortDateFmt.format(new Date(iso))
+export function formatShortDate(iso: string) {
+  const { day, month } = dateParts(iso)
+  return `${Number(day)} ${month}`
+}
 /** 1:02 pm */
 export const formatTime = (iso: string | null) => (iso ? timeFmt.format(new Date(iso)).toLowerCase() : '')
 

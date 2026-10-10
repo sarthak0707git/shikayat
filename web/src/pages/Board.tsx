@@ -46,7 +46,7 @@ export default function Board() {
             aria-pressed={domain === name}
             onClick={() => setDomain(name)}
             className={cx(
-              'press h-9 shrink-0 rounded-full border px-3 text-sm font-medium transition-colors duration-150',
+              'press h-11 shrink-0 rounded-full border px-4 text-sm font-medium transition-colors duration-150 sm:h-9 sm:px-3',
               domain === name
                 ? 'border-zinc-900 bg-zinc-900 text-white'
                 : 'border-zinc-200 text-zinc-700 hover:bg-zinc-50',
