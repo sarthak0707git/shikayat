@@ -45,8 +45,40 @@ Tests: `./.venv/bin/python -m pytest harness` (no key and no internet needed —
 
 ## What we changed in the harness and why
 
-*(P1 fills this in — brief section 5. Per-agent tool sets, image input, terminal tools,
-pause-for-a-human, step labels, `RunResult`. Two Gemma calls per complaint instead of four.)*
+The workshop starter ships a small tool-calling harness: `Agent.run(question)` loops until the
+model stops asking for tools, then returns a string. It is text-only, stateless, sends every
+registered tool on every call, and **always needs one extra model round just to write a final
+answer**. Triaging a complaint that way costs four Gemma calls.
+
+We rebuilt the loop around what a real triage flow actually needs. All of this is in
+[`harness/agent.py`](harness/agent.py) and [`harness/tools.py`](harness/tools.py), with
+`run()` kept byte-for-byte compatible so old callers and the starter's own tests still pass.
+
+| # | What we added | Why |
+|---|---|---|
+| 1 | **Per-agent tool sets** — `Agent(tools=["find_similar", "merge_into"])` | Sending all tools invites the model into irrelevant ones. Our triage agent sees five tools, not everything registered in the process. |
+| 2 | **Image input** — `run_task(question, image_path=...)` | A photo of an insect on a plate *is* the evidence. We send it as an inline `types.Part.from_bytes`, and fall back to `client.files.upload` if the API refuses inline bytes. |
+| 3 | **Terminal tools** — `@tool(stop=True)` | `file_new`, `merge_into` and `reject` finish the job. A successful call ends the run and returns its own result, so there is no extra "now write an answer" round. **This is the change that halves the call count.** |
+| 4 | **Pause for a human** — `@tool(pause=True)` + `Agent.resume(state, answer)` | Gemma needs to be able to ask the student "which hostel and room?" and then carry on in the *same* conversation. The run returns `status="needs_input"` with the question, and resuming appends the answer and continues. |
+| 5 | **Step labels** — every step carries a readable `label` | The Report page shows "Looking for similar reports in Mess" while the student waits, instead of a dead spinner. |
+| 6 | **`RunResult`** — `{status, tool, result, question, steps, state}` | A string cannot say "I paused and need an answer". The API maps this straight onto `ReportResult`. |
+
+**The result: a complaint costs 2 Gemma calls instead of 4.** One to pick a bucket and look for
+duplicates, one to decide. `harness/test_upgrades.py::test_terminal_tool_ends_the_run_with_no_extra_model_call`
+asserts the call count directly.
+
+An error is a first-class part of the design rather than a failure: a `stop` or `pause` tool
+whose result starts with `"Error"` does **not** end the run, so the model sees the problem and
+tries again. That is how the rules Gemma must not be trusted with are enforced in code — at most
+two questions per report, no merging into a complaint id it was not just shown, and never setting
+priority or escalation itself. See [`complaints/tools.py`](complaints/tools.py).
+
+Honest limitation: paused conversations live in an in-memory dict keyed by `thread_id`
+(`harness.THREADS`). Restarting the server loses half-finished reports. For a demo that is a fair
+trade for having no extra moving parts; production would put them in Redis or a `threads` table.
+
+Tests: 34 of them, all using a fake `generate`, so `python -m pytest harness` needs no API key
+and no internet.
 
 ## Architecture
 
