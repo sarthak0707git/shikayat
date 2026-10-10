@@ -60,6 +60,16 @@ body {
   animation: bump 260ms var(--ease-out-strong);
 }
 
+/* Bars on the board: a full-width fill slid into place, so only transform animates. */
+.bar {
+  transform: translateX(var(--offset, -100%));
+  transition: transform 280ms var(--ease-out-strong);
+  transition-delay: calc(var(--i, 0) * 40ms);
+  @starting-style {
+    transform: translateX(-100%);
+  }
+}
+
 .skeleton {
   @apply rounded-md bg-zinc-100;
 }
@@ -78,5 +88,8 @@ body {
   }
   .bump {
     animation: none;
+  }
+  .bar {
+    transition: none;
   }
 }

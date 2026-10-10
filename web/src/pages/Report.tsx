@@ -355,7 +355,7 @@ function ResultCard({ result }: { result: ReportResult }) {
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
             <span className="inline-flex items-center gap-2 text-sm text-zinc-700">
-              <CountBadge count={complaint.report_count} />
+              <CountBadge count={complaint.report_count} bumpOnMount={status === 'merged'} />
               {status === 'merged'
                 ? `${plural(complaint.report_count, 'student')} reported this`
                 : plural(complaint.report_count, 'report')}

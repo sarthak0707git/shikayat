@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react'
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import type { Severity, Status } from '../types'
 
 export function cx(...parts: (string | false | null | undefined)[]) {
@@ -71,8 +71,21 @@ export function StatusPill({ status }: { status: Status }) {
   )
 }
 
-/** The number of students behind a complaint. Re-keyed on change so the bump replays. */
-export function CountBadge({ count, className }: { count: number; className?: string }) {
+/** Decides once, when it mounts, whether to play the bump. */
+function Tick({ animate, children }: { animate: boolean; children: ReactNode }) {
+  const [on] = useState(animate)
+  return <span className={on ? 'bump' : undefined}>{children}</span>
+}
+
+/**
+ * The number of students behind a complaint. Re-keyed on change so the bump replays;
+ * it stays still on first paint unless `bumpOnMount` is set.
+ */
+export function CountBadge({ count, className, bumpOnMount = false }: { count: number; className?: string; bumpOnMount?: boolean }) {
+  const mounted = useRef(false)
+  useEffect(() => {
+    mounted.current = true
+  }, [])
   return (
     <span
       className={cx(
@@ -82,9 +95,9 @@ export function CountBadge({ count, className }: { count: number; className?: st
       )}
       title={`${count} ${count === 1 ? 'report' : 'reports'}`}
     >
-      <span key={count} className="bump">
+      <Tick key={count} animate={bumpOnMount || mounted.current}>
         {count}
-      </span>
+      </Tick>
     </span>
   )
 }
