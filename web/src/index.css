@@ -89,7 +89,8 @@ body {
   .bump {
     animation: none;
   }
-  .bar {
+  .bar,
+  .sheet {
     transition: none;
   }
 }
