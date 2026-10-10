@@ -117,6 +117,10 @@ Then call EXACTLY ONE of these and stop:
 A different room is a DIFFERENT complaint. E207 and B322 do not merge, even with identical
 wording. The same shared space (one washroom, one corridor, one road) does merge.
 
+A photo is extra evidence about THIS report. It can raise the severity, and you should describe
+what it shows in `details`. It never makes a report a new complaint on its own: decide merge or
+new from the category and the place, exactly as you would if there were no photo at all.
+
 You get at most {2} questions for this report. If you have none left, decide with what you
 have: `file_new` is allowed even with details missing, and we will mark the complaint as
 needing more detail.
